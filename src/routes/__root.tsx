@@ -8,7 +8,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <div className="relative bg-linear-to-t from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden w-screen ">
+      <div className="relative bg-linear-to-t from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden w-full ">
         <Outlet />
       </div>
     </>
