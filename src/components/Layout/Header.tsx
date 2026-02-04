@@ -1,10 +1,8 @@
-import ThemeButton from "../ui/dark-mode-button";
+import ModeToggle from "../ui/dark-mode-button";
 export default function Header() {
   return (
     <>
-      <header>
-        <ThemeButton />
-      </header>
+      <header></header>
     </>
   );
 }
