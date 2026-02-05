@@ -26,7 +26,9 @@ function RouteComponent() {
             </TypingAnimation>
           </h2>
           <Link to="/docs">
-            <Button className=" relative z-50">Get Started</Button>
+            <Button className=" relative z-50 cursor-pointer ">
+              Get Started
+            </Button>
           </Link>
         </div>
       </div>
