@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Header from "@/components/Layout/Header";
+import Footer from "@/components/Layout/Footer";
+
 import AppSidebar from "@/components/ui/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -17,6 +19,7 @@ function RouteComponent() {
           <h1>hello</h1>
         </main>
       </div>
+      <Footer />
     </>
   );
 }

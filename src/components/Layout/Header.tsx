@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import ModeToggle from "../ui/dark-mode-button";
-
 export default function Header() {
   return (
     <header className="sticky top-0 w-full z-50 pt-2 h-15 bg-background backdrop-blur border-b-2  ">

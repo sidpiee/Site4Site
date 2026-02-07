@@ -7,7 +7,7 @@ import Movie from "@/assets/pics/Movie.png";
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-card h-screen overflow-y-auto rounded-r-2xl no-scrollbar">
+    <aside className="w-64 shrink-0 border-r border-border bg-sidebar h-screen overflow-y-auto rounded-r-2xl no-scrollbar">
       <nav className="flex h-full flex-col gap-7 mt-5 ">
         <SidebarItem label="Site" imgSrc={site} />
         <SidebarItem label="Tasks" imgSrc={Tasks} />
