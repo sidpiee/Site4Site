@@ -17,8 +17,15 @@ export default function Footer() {
           </h1>
         </div>
         <div className=" flex flex-1 justify-end px-10 items-center gap-10">
-          <Github />
-          <Linkedin />
+          <a href="https://github.com/sidpiee" target="_blank">
+            <Github />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/siddharth-sharma-b236312a3/"
+            target="_blank"
+          >
+            <Linkedin />
+          </a>
           <Mail />
         </div>
       </div>
