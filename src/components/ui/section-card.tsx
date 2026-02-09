@@ -1,14 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Plus } from "lucide-react";
-export default function SectionCard() {
+
+type SectionCardProps = {
+  title: string;
+  description: string;
+};
+export default function SectionCard({ title, description }: SectionCardProps) {
   return (
-    <div className="flex bg-muted/70 px-6 py-4 items-center rounded-md">
+    <div className="flex bg-muted/70 dark:bg-muted/20 px-6 py-4 items-center rounded-md mt-4">
       <div className="flex flex-col gap-1">
         <h1 className="font-[Space_Grotesk] font-bold text-3xl text-card-foreground">
-          AI Slop
+          {title}
         </h1>
         <p className="font-[Space_Grotesk] text-sm text-muted-foreground">
-          all of the AI i can use
+          {description}
         </p>
       </div>
 

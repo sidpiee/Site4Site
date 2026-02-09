@@ -4,7 +4,7 @@ import DisplayCard from "@/components/ui/display-card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import SectionCard from "@/components/ui/section-card";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
@@ -12,8 +12,44 @@ export const Route = createFileRoute("/site/")({
   component: RouteComponent,
 });
 
+type InputBoxProps = {
+  addsection: (title: string, description: string) => void;
+};
+
 function RouteComponent() {
   const [inputOpen, setInputOpen] = useState<boolean>(false);
+  const [sections, setSections] = useState<
+    {
+      id: string;
+      title: string;
+      description: string;
+      sites: {
+        id: string;
+        name: string;
+        url: string;
+        note: string;
+      }[];
+    }[]
+  >([]);
+  function addsection(title: string, description: string) {
+    setSections((prevSections) => {
+      return [
+        ...prevSections,
+        {
+          id: crypto.randomUUID(),
+          title,
+          description,
+          sites: [],
+        },
+      ];
+    });
+    setInputOpen(false);
+  }
+  const displaysection: ReactNode[] = sections.map((s) => {
+    return (
+      <SectionCard key={s.id} title={s.title} description={s.description} />
+    );
+  });
 
   return (
     <MainLayout>
@@ -25,17 +61,18 @@ function RouteComponent() {
         >
           Add Section <Plus />
         </Button>
-        {inputOpen && <InputBox />}
-        {/* <SectionCard />
-        <DisplayCard /> */}
+        {inputOpen && <InputBox addsection={addsection} />}
+        {/* <DisplayCard /> */}
       </div>
+      {displaysection}
     </MainLayout>
   );
 }
-function InputBox() {
+function InputBox({ addsection }: InputBoxProps) {
   function takeinput(formData: FormData): void {
-    const title = formData.get("title");
-    const description = formData.get("description");
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    addsection(title, description);
   }
   return (
     <div
@@ -51,6 +88,7 @@ function InputBox() {
               placeholder="AI slop"
               name="title"
               className="bg-gray-100"
+              required
             />
           </Field>
           <Field>
