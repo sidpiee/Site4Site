@@ -41,11 +41,11 @@ function SidebarItem({ label, imgSrc }: { label: string; imgSrc: any }) {
       initial="rest"
       animate="rest"
       whileHover="hover"
-      className=" px-6 py-4 relative flex items-center  overflow-hidden cursor-pointer"
+      className=" px-6 py-4 relative flex items-center font-[Figtree]  overflow-hidden cursor-pointer"
     >
       <motion.span
         variants={text}
-        className="text-foreground z-10 text-lg font-bold font-[Zalando_Sans_Expanded]"
+        className="text-foreground z-10 text-lg font-semibold "
       >
         Site4{label}
       </motion.span>

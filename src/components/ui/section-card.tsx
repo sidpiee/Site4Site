@@ -13,12 +13,12 @@ export default function SectionCard() {
       </div>
 
       <div className="flex flex-1 justify-end items-center gap-2">
-        <Button size="sm" variant="secondary">
+        <Button size="sm" variant="secondary" className="cursor-pointer">
           <Plus className="h-4 w-4" />
           Add Site
         </Button>
 
-        <button className="flex items-center justify-center rounded-md p-1 hover:bg-muted">
+        <button className="flex items-center justify-center rounded-md p-1 hover:bg-muted cursor-pointer">
           <ChevronDown className="h-5 w-5 text-muted-foreground" />
         </button>
       </div>
