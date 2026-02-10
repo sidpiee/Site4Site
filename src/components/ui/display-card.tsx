@@ -10,9 +10,11 @@ export default function DisplayCard() {
           />
         </div>
         <div className="flex flex-col">
-          <h1 className="font-[Bangers] text-card-foreground text-3xl tracking-wide">
-            Youtube
-          </h1>
+          <a href="https://youtube.com" target="_blank">
+            <h1 className="font-[Bangers] text-card-foreground text-3xl tracking-wide">
+              Youtube
+            </h1>
+          </a>
           <h1 className="font-[Fredoka] font-medium text-muted-foreground">
             Love to watch vids on this site. I mean normal vids damn
           </h1>
