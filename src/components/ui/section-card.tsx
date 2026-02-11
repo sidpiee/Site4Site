@@ -7,8 +7,26 @@ import { useState } from "react";
 type SectionCardProps = {
   title: string;
   description: string;
+  id: string;
+  addsite: (
+    sectionId: string,
+    site: { name: string; url: string; note: string },
+  ) => void;
 };
-export default function SectionCard({ title, description }: SectionCardProps) {
+type InputBoxProps = {
+  id: string;
+  addsite: (
+    sectionId: string,
+    site: { name: string; url: string; note: string },
+  ) => void;
+  close: () => void;
+};
+export default function SectionCard({
+  title,
+  description,
+  id,
+  addsite,
+}: SectionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   return (
     <div className="flex bg-muted/70 dark:bg-muted/20 px-6 py-4 items-center rounded-md mt-4">
@@ -31,7 +49,9 @@ export default function SectionCard({ title, description }: SectionCardProps) {
           <Plus className="h-4 w-4" />
           Add Site
         </Button>
-        {open && <InputBox />}
+        {open && (
+          <InputBox addsite={addsite} id={id} close={() => setOpen(false)} />
+        )}
 
         <button className="flex items-center justify-center rounded-md p-1 hover:bg-muted cursor-pointer">
           <ChevronDown className="h-5 w-5 text-muted-foreground" />
@@ -41,11 +61,13 @@ export default function SectionCard({ title, description }: SectionCardProps) {
   );
 }
 
-function InputBox() {
+function InputBox({ addsite, id, close }: InputBoxProps) {
   function takeinput(formData: FormData): void {
     const url = formData.get("url") as string;
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const note = formData.get("note") as string;
+    addsite(id, { name, url, note });
+    close();
   }
   return (
     <div
@@ -61,6 +83,7 @@ function InputBox() {
               name="name"
               placeholder="youtube"
               className="bg-gray-100"
+              required
             />
           </Field>
           <Field>
@@ -74,10 +97,10 @@ function InputBox() {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="description">Description</FieldLabel>
+            <FieldLabel htmlFor="note">Description</FieldLabel>
             <Input
-              id="description"
-              name="description"
+              id="note"
+              name="note"
               placeholder="love to watch videos hehehe"
               className="bg-gray-100"
             />

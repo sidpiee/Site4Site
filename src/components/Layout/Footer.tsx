@@ -17,12 +17,17 @@ export default function Footer() {
           </h1>
         </div>
         <div className=" flex flex-1 justify-end px-10 items-center gap-10">
-          <a href="https://github.com/sidpiee" target="_blank">
+          <a
+            href="https://github.com/sidpiee"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Github />
           </a>
           <a
             href="https://www.linkedin.com/in/siddharth-sharma-b236312a3/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <Linkedin />
           </a>

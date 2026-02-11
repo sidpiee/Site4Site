@@ -40,11 +40,43 @@ function RouteComponent() {
     });
     setInputOpen(false);
   }
+  function addSite(
+    sectionId: string,
+    site: { name: string; url: string; note: string },
+  ) {
+    setSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              sites: [...section.sites, { id: crypto.randomUUID(), ...site }],
+            }
+          : section,
+      ),
+    );
+  }
+
   const displaysection: ReactNode[] = sections.map((s) => {
     return (
-      <SectionCard key={s.id} title={s.title} description={s.description} />
+      <SectionCard
+        key={s.id}
+        id={s.id}
+        title={s.title}
+        description={s.description}
+        addsite={addSite}
+      />
     );
   });
+  const displaycards = sections.flatMap((s) =>
+    s.sites.map((site) => (
+      <DisplayCard
+        key={site.id}
+        name={site.name}
+        url={site.url}
+        note={site.note}
+      />
+    )),
+  );
 
   return (
     <MainLayout>
@@ -58,7 +90,7 @@ function RouteComponent() {
         </Button>
         {inputOpen && <InputBox addsection={addsection} />}
       </div>
-      {/* <DisplayCard /> */}
+      {displaycards}
       {displaysection}
     </MainLayout>
   );
