@@ -5,7 +5,7 @@ type DisplayCardProps = {
 };
 export default function DisplayCard({ name, url, note }: DisplayCardProps) {
   return (
-    <div className="bg-card h-22 w-full px-6 rounded-l-lg mt-2 flex items-center justify-start gap-7">
+    <div className="bg-card h-22 w-full px-6 rounded-l-lg mt-3 flex items-center justify-start gap-7 border-border border-4">
       <div className="bg-background/80 rounded-md p-2">
         <img
           src={`https://www.google.com/s2/favicons?domain=${url}&sz=32`}
@@ -15,7 +15,7 @@ export default function DisplayCard({ name, url, note }: DisplayCardProps) {
       </div>
       <div className="flex flex-col">
         <a href={url} target="_blank" rel="noopener noreferrer">
-          <h1 className="font-[Bangers] text-card-foreground text-3xl tracking-wide">
+          <h1 className="font-[Space_Grotesk] font-semibold text-card-foreground text-3xl tracking-wide">
             {name}
           </h1>
         </a>

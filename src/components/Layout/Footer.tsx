@@ -3,7 +3,7 @@ import { Copyright, Github, Linkedin, Mail } from "lucide-react";
 export default function Footer() {
   return (
     <footer>
-      <div className="w-full bg-footer text-foreground px-4 py-2 flex border-t">
+      <div className="w-full bg-footer text-foreground px-4  flex border-t">
         <div className="flex flex-col gap-2">
           <div className="flex justify-start items-center gap-4">
             <img src={logo} alt="" className="h-10 w-10" />

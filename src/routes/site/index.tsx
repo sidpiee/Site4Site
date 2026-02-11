@@ -11,21 +11,23 @@ export const Route = createFileRoute("/site/")({
   component: RouteComponent,
 });
 
+type Site = {
+  id: string;
+  name: string;
+  url: string;
+  note: string;
+};
+
+type Section = {
+  id: string;
+  title: string;
+  description: string;
+  sites: Site[];
+};
+
 function RouteComponent() {
   const [inputOpen, setInputOpen] = useState<boolean>(false);
-  const [sections, setSections] = useState<
-    {
-      id: string;
-      title: string;
-      description: string;
-      sites: {
-        id: string;
-        name: string;
-        url: string;
-        note: string;
-      }[];
-    }[]
-  >([]);
+  const [sections, setSections] = useState<Section[]>([]);
   function addsection(title: string, description: string) {
     setSections((prevSections) => {
       return [
@@ -56,28 +58,6 @@ function RouteComponent() {
     );
   }
 
-  const displaysection: ReactNode[] = sections.map((s) => {
-    return (
-      <SectionCard
-        key={s.id}
-        id={s.id}
-        title={s.title}
-        description={s.description}
-        addsite={addSite}
-      />
-    );
-  });
-  const displaycards = sections.flatMap((s) =>
-    s.sites.map((site) => (
-      <DisplayCard
-        key={site.id}
-        name={site.name}
-        url={site.url}
-        note={site.note}
-      />
-    )),
-  );
-
   return (
     <MainLayout>
       <div className="relative inline-block">
@@ -90,8 +70,10 @@ function RouteComponent() {
         </Button>
         {inputOpen && <InputBox addsection={addsection} />}
       </div>
-      {displaycards}
-      {displaysection}
+
+      {sections.map((s) => {
+        return <SectionCard key={s.id} section={s} addsite={addSite} />;
+      })}
     </MainLayout>
   );
 }
