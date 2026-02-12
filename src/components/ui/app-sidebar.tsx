@@ -8,7 +8,7 @@ import { Link } from "@tanstack/react-router";
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-sidebar  overflow-y-auto rounded-r-2xl no-scrollbar">
+    <aside className="w-55 shrink-0 border-r border-border bg-sidebar  overflow-y-auto rounded-r-2xl no-scrollbar">
       <nav className="flex h-full flex-col gap-6 mt-5 ">
         <SidebarItem label="Site" imgSrc={site} />
         <SidebarItem label="Tasks" imgSrc={Tasks} />

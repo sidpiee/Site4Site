@@ -57,6 +57,13 @@ function RouteComponent() {
       ),
     );
   }
+  function removesection(sectionId: string) {
+    setSections((prevSections) =>
+      prevSections.filter((s) => {
+        s.id !== sectionId;
+      }),
+    );
+  }
 
   return (
     <MainLayout>
@@ -72,7 +79,14 @@ function RouteComponent() {
       </div>
 
       {sections.map((s) => {
-        return <SectionCard key={s.id} section={s} addsite={addSite} />;
+        return (
+          <SectionCard
+            key={s.id}
+            section={s}
+            addsite={addSite}
+            removesection={removesection}
+          />
+        );
       })}
     </MainLayout>
   );

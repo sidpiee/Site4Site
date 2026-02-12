@@ -22,6 +22,7 @@ type Section = {
 type SectionCardProps = {
   section: Section;
   addsite: (sectionId: string, site: Omit<Site, "id">) => void;
+  removesection: (sectionId: string) => void;
 };
 
 type InputBoxProps = {
@@ -30,14 +31,18 @@ type InputBoxProps = {
   close: () => void;
   opendropdown: () => void;
 };
-export default function SectionCard({ section, addsite }: SectionCardProps) {
+export default function SectionCard({
+  section,
+  addsite,
+  removesection,
+}: SectionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   return (
     <div className="flex flex-col bg-muted/70 dark:bg-muted/20 px-6 py-4 rounded-md mt-4">
       <div className="flex  items-center ">
         <div className="flex flex-col gap-1">
-          <h1 className="font-[Space_Grotesk] font-bold text-3xl text-card-foreground">
+          <h1 className="font-[Urbanist]  font-bold text-3xl text-card-foreground">
             {section.title}
           </h1>
           <p className="font-[Space_Grotesk] text-sm text-muted-foreground">
@@ -45,15 +50,22 @@ export default function SectionCard({ section, addsite }: SectionCardProps) {
           </p>
         </div>
 
-        <div className="flex flex-1 justify-end items-center gap-2 relative">
+        <div className="flex flex-1 justify-end items-center gap-4 relative">
+          <Button
+            variant={"destructive"}
+            className="dark:border-white/40 border-black/40  border cursor-pointer dark:text-white text-black/70"
+            onClick={() => removesection(section.id)}
+          >
+            Delete
+          </Button>
           <Button
             size="sm"
             variant="outline"
-            className="cursor-pointer"
+            className="cursor-pointer border-2"
             onClick={() => setOpen((prevOpen) => !prevOpen)}
           >
-            <Plus className="h-4 w-4" />
             Add Site
+            <Plus className="h-4 w-4" />
           </Button>
           {open && (
             <InputBox
@@ -77,6 +89,7 @@ export default function SectionCard({ section, addsite }: SectionCardProps) {
           section.sites.map((site) => (
             <DisplayCard
               key={site.id}
+              id={site.id}
               name={site.name}
               url={site.url}
               note={site.note}

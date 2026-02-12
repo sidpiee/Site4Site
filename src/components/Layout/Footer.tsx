@@ -6,8 +6,8 @@ export default function Footer() {
       <div className="w-full bg-footer text-foreground px-4  flex border-t">
         <div className="flex flex-col gap-2">
           <div className="flex justify-start items-center gap-4">
-            <img src={logo} alt="" className="h-10 w-10" />
-            <h1 className="text-2xl  font-[Poppins] italic font-semibold">
+            <img src={logo} alt="" className="h-5 w-5" />
+            <h1 className="text-md  font-[Poppins] italic font-semibold">
               Save it. Tag it. Remember why.
             </h1>
           </div>

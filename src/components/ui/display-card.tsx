@@ -1,9 +1,12 @@
+import { Button } from "./button";
+
 type DisplayCardProps = {
+  id: string;
   name: string;
   url: string;
   note: string;
 };
-export default function DisplayCard({ name, url, note }: DisplayCardProps) {
+export default function DisplayCard({ name, url, note, id }: DisplayCardProps) {
   return (
     <div className="bg-card h-22 w-full px-6 rounded-l-lg mt-3 flex items-center justify-start gap-7 border-border border-4">
       <div className="bg-background/80 rounded-md p-2">
@@ -15,13 +18,21 @@ export default function DisplayCard({ name, url, note }: DisplayCardProps) {
       </div>
       <div className="flex flex-col">
         <a href={url} target="_blank" rel="noopener noreferrer">
-          <h1 className="font-[Space_Grotesk] font-semibold text-card-foreground text-3xl tracking-wide">
+          <h1 className="font-[Urbanist] font-semibold text-card-foreground text-3xl tracking-wide">
             {name}
           </h1>
         </a>
         <h1 className="font-[Fredoka] font-medium text-muted-foreground">
           {note}
         </h1>
+      </div>
+      <div className="flex flex-1 justify-end">
+        <Button
+          variant={"destructive"}
+          className="dark:border-white/40 border-black/40  border cursor-pointer dark:text-white text-black/70"
+        >
+          Delete
+        </Button>
       </div>
     </div>
   );
