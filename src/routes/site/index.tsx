@@ -59,12 +59,21 @@ function RouteComponent() {
   }
   function removesection(sectionId: string) {
     setSections((prevSections) =>
-      prevSections.filter((s) => {
-        s.id !== sectionId;
-      }),
+      prevSections.filter((s) => sectionId !== s.id),
     );
   }
-
+  function removeSite(sectionId: string, siteId: string) {
+    setSections((prevSections) =>
+      prevSections.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              sites: section.sites.filter((site) => site.id !== siteId),
+            }
+          : section,
+      ),
+    );
+  }
   return (
     <MainLayout>
       <div className="relative inline-block">
@@ -85,6 +94,7 @@ function RouteComponent() {
             section={s}
             addsite={addSite}
             removesection={removesection}
+            removesite={removeSite}
           />
         );
       })}

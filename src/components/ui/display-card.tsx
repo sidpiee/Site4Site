@@ -5,8 +5,15 @@ type DisplayCardProps = {
   name: string;
   url: string;
   note: string;
+  ondelete: () => void;
 };
-export default function DisplayCard({ name, url, note, id }: DisplayCardProps) {
+export default function DisplayCard({
+  name,
+  url,
+  note,
+  id,
+  ondelete,
+}: DisplayCardProps) {
   return (
     <div className="bg-card h-22 w-full px-6 rounded-l-lg mt-3 flex items-center justify-start gap-7 border-border border-4">
       <div className="bg-background/80 rounded-md p-2">
@@ -30,6 +37,7 @@ export default function DisplayCard({ name, url, note, id }: DisplayCardProps) {
         <Button
           variant={"destructive"}
           className="dark:border-white/40 border-black/40  border cursor-pointer dark:text-white text-black/70"
+          onClick={ondelete}
         >
           Delete
         </Button>

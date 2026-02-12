@@ -23,6 +23,7 @@ type SectionCardProps = {
   section: Section;
   addsite: (sectionId: string, site: Omit<Site, "id">) => void;
   removesection: (sectionId: string) => void;
+  removesite: (sectionId: string, siteId: string) => void;
 };
 
 type InputBoxProps = {
@@ -35,6 +36,7 @@ export default function SectionCard({
   section,
   addsite,
   removesection,
+  removesite,
 }: SectionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -93,6 +95,7 @@ export default function SectionCard({
               name={site.name}
               url={site.url}
               note={site.note}
+              ondelete={() => removesite(section.id, site.id)}
             />
           ))}
       </div>
