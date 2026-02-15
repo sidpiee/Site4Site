@@ -3,21 +3,37 @@ import { createFileRoute } from "@tanstack/react-router";
 import MainLayout from "@/components/Layout/MainLayout";
 import { SearchBar } from "@/components/ui/searchbar";
 import MovieCard from "@/components/ui/movie-card";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
 });
 
+type Movie = {
+  id: string;
+  title: string;
+  year: number;
+  poster: string;
+  genre: string[];
+  runtime: number;
+  imdbRating: number;
+  personalRating?: number;
+  status: "watched" | "plan";
+  description?: string;
+};
+
 function RouteComponent() {
+  const [movies, setMovies] = useState<Movie[]>([]);
   return (
     <MainLayout>
       <div className="flex justify-between">
         <SearchBar />
         <BtnGroup />
       </div>
-      <MovieCard />
+      <div className="grid grid-cols-3 gap-6 mt-6">
+        {movies.map((m) => (
+          <MovieCard movie={m} key={m.id} />
+        ))}
+      </div>
     </MainLayout>
   );
 }
