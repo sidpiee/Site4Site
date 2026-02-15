@@ -6,7 +6,6 @@ import { Plus } from "lucide-react";
 import SectionCard from "@/components/ui/section-card";
 import { useState, type ReactNode } from "react";
 import InputBox from "@/components/ui/input-box";
-import { SearchBar } from "@/components/ui/searchbar";
 
 export const Route = createFileRoute("/site/")({
   component: RouteComponent,
@@ -76,9 +75,7 @@ function RouteComponent() {
     );
   }
   return (
-    <SearchBar/>
     <MainLayout>
-      
       <div className="relative inline-block">
         <Button
           className="p-4 text-md border-2 cursor-pointer"
