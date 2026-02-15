@@ -12,7 +12,7 @@ export default function MovieCard() {
           alt=""
           className="rounded-t-xl h-70 "
         />
-        <div className="absolute inset-0 bg-linear-to-b from-black/20 to-transparent top-1/2 dark:bg-linear-to-b dark:from-white/5 dark:to-transparent" />
+        {/* <div className="absolute inset-0 bg-linear-to-b from-black/20 to-transparent top-1/2 " /> */}
         <div className="flex justify-between px-2 items-center">
           <h1 className="font-bold text-center my-2 font-[Jost]">
             Shutter Island (2014)
