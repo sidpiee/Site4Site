@@ -10,15 +10,16 @@ export default function Sidebar() {
   return (
     <aside className="w-55 shrink-0 border-r border-border bg-sidebar  overflow-y-auto rounded-r-2xl no-scrollbar">
       <nav className="flex h-full flex-col gap-6 mt-5 ">
-        <SidebarItem label="Site" imgSrc={site} />
-        <SidebarItem label="Tasks" imgSrc={Tasks} />
-        <SidebarItem label="Anime" imgSrc={anime} />
-        <SidebarItem label="Movies" imgSrc={Movie} />
-        <SidebarItem label="Games" imgSrc={games} />
+        <SidebarItem label="Site" imgSrc={site} to="/site" />
+        <SidebarItem label="Tasks" imgSrc={Tasks} to="/tasks" />
+        <SidebarItem label="Anime" imgSrc={anime} to="/anime" />
+        <SidebarItem label="Movies" imgSrc={Movie} to="/movies" />
+        <SidebarItem label="Games" imgSrc={games} to="/games" />
       </nav>
     </aside>
   );
 }
+const MotionLink = motion.create(Link);
 const container = {
   rest: {},
   hover: {},
@@ -34,9 +35,18 @@ const text = {
   hover: { x: -8 },
 };
 
-function SidebarItem({ label, imgSrc }: { label: string; imgSrc: any }) {
+function SidebarItem({
+  label,
+  imgSrc,
+  to,
+}: {
+  label: string;
+  imgSrc: any;
+  to: string;
+}) {
   return (
-    <motion.button
+    <MotionLink
+      to={to}
       variants={container}
       initial="rest"
       animate="rest"
@@ -55,6 +65,6 @@ function SidebarItem({ label, imgSrc }: { label: string; imgSrc: any }) {
         variants={image}
         className="absolute right-4 h-16 w-16 object-contain"
       />
-    </motion.button>
+    </MotionLink>
   );
 }

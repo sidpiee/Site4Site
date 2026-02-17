@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import MainLayout from "@/components/Layout/MainLayout";
 import { SearchBar } from "@/components/ui/searchbar";
 import MovieCard from "@/components/ui/movie-card";
-import { h1 } from "motion/react-client";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
@@ -43,7 +42,7 @@ function RouteComponent() {
         ))}
       </div>
       {filteredMovies.length === 0 && (
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center flex flex-col items-center">
           <p className="text-foreground font-semibold text-3xl">
             No movies found 🍿
           </p>
@@ -66,7 +65,7 @@ function BtnGroup({ active, setActive }: BtnGroupProps) {
   const inactiveStyle = "text-white/70 hover:text-white";
 
   return (
-    <div className="flex dark:bg-blue-950/40 bg-blue-400/50 rounded-3xl p-2 border border-white/20 gap-5 w-fit">
+    <div className="flex dark:bg-indigo-950 bg-blue-400/50 rounded-3xl p-2 border border-white/20 gap-5 w-fit">
       <button
         onClick={() => setActive("watched")}
         className={`${baseStyle} ${
