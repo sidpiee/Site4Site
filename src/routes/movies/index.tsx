@@ -3,11 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import MainLayout from "@/components/Layout/MainLayout";
 import { SearchBar } from "@/components/ui/searchbar";
 import MovieCard from "@/components/ui/movie-card";
+import { h1 } from "motion/react-client";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
 });
-
+type Filter = "watched" | "all" | "plan";
 type Movie = {
   id: string;
   title: string;
@@ -20,28 +21,42 @@ type Movie = {
   status: "watched" | "plan";
   description?: string;
 };
-
+type BtnGroupProps = {
+  active: Filter;
+  setActive: (value: Filter) => void;
+};
 function RouteComponent() {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [filter, setFilter] = useState<Filter>("all");
+
+  const filteredMovies =
+    filter === "all" ? movies : movies.filter((m) => m.status === filter);
   return (
     <MainLayout>
       <div className="flex justify-between">
         <SearchBar />
-        <BtnGroup />
+        <BtnGroup active={filter} setActive={setFilter} />
       </div>
       <div className="grid grid-cols-3 gap-6 mt-6">
-        {movies.map((m) => (
+        {filteredMovies.map((m) => (
           <MovieCard movie={m} key={m.id} />
         ))}
       </div>
+      {filteredMovies.length === 0 && (
+        <div className="mt-16 text-center">
+          <p className="text-foreground font-semibold text-3xl">
+            No movies found 🍿
+          </p>
+          <p className="text-foreground mt-2 text-md">
+            Try changing filters or adding a new movie.
+          </p>
+        </div>
+      )}
     </MainLayout>
   );
 }
 
-export default function BtnGroup() {
-  type Filter = "watched" | "all" | "plan";
-  const [active, setActive] = useState<Filter>("all");
-
+function BtnGroup({ active, setActive }: BtnGroupProps) {
   const baseStyle =
     "px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-300 cursor-pointer";
 
