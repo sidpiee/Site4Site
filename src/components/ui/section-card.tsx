@@ -55,7 +55,7 @@ export default function SectionCard({
         <div className="flex flex-1 justify-end items-center gap-4 relative">
           <Button
             variant={"destructive"}
-            className="dark:border-white/40 border-black/40  border cursor-pointer dark:text-white text-black/70"
+            className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground"
             onClick={() => removesection(section.id)}
           >
             Delete

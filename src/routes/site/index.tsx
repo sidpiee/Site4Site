@@ -98,6 +98,12 @@ function RouteComponent() {
           />
         );
       })}
+      {sections.length === 0 && (
+        <p className="text-foreground mt-10 font-bold text-lg font-[Urbanist]">
+          {" "}
+          No sections added yet. Add one to get started.
+        </p>
+      )}
     </MainLayout>
   );
 }
