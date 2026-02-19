@@ -1,9 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import MainLayout from "@/components/Layout/MainLayout";
 
-export const Route = createFileRoute('/games/')({
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/games/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/games/"!</div>
+  return (
+    <MainLayout>
+      <div>hello</div>
+    </MainLayout>
+  );
 }
