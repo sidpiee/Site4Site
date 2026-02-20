@@ -1,4 +1,5 @@
 import MainLayout from "@/components/Layout/MainLayout";
+import { SearchBar } from "@/components/ui/searchbar";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/games/")({
 function RouteComponent() {
   return (
     <MainLayout>
-      <div>hello</div>
+      <SearchBar placeholder="Elden Ring..." />
     </MainLayout>
   );
 }

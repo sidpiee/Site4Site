@@ -33,7 +33,7 @@ function RouteComponent() {
   return (
     <MainLayout>
       <div className="flex justify-between">
-        <SearchBar />
+        <SearchBar placeholder="Titanic..." />
         <BtnGroup active={filter} setActive={setFilter} />
       </div>
       <div className="grid grid-cols-3 gap-6 mt-6">
