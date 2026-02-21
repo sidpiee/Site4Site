@@ -18,7 +18,7 @@ export default function TaskCard({
   deleteTask,
 }: TaskCardProps) {
   const CompletedClass = "bg-primary text-primary-foreground border-primary";
-  const InCompleteClass = "bg-black border-border hover:bg-muted/70";
+  const InCompleteClass = "bg-white dark:bg-black  border-border ";
   return (
     <div className="w-full bg-card drop-shadow-black/20 drop-shadow-sm flex items-center justify-start p-5 rounded-2xl gap-4 border-border border mt-4">
       <button

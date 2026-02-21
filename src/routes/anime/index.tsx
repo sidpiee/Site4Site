@@ -1,9 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import MainLayout from "@/components/Layout/MainLayout";
+import AnimeCard from "@/components/ui/anime-card";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/anime/')({
+export const Route = createFileRoute("/anime/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/anime/"!</div>
+  return (
+    <MainLayout>
+      <AnimeCard />
+    </MainLayout>
+  );
 }
