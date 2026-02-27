@@ -32,7 +32,7 @@ export default function AnimeCard() {
               </span>
               <span className=" font-[Urbanist] font-semibold">11/13</span>
             </FieldLabel>
-            <Progress value={(3 * 100) / 13} id="episodes-watched" />
+            <Progress value={(11 * 100) / 13} id="episodes-watched" />
           </Field>
 
           <div className="mt-2 p-3 bg-muted/50 rounded-xl border-l-4 border-primary">

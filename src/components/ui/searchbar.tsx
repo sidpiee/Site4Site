@@ -7,8 +7,10 @@ import {
 import { SearchIcon } from "lucide-react";
 type SearchBarProps = {
   placeholder: string;
+  Search: string;
+  SetSearch: (value: string) => void;
 };
-export function SearchBar({ placeholder }: SearchBarProps) {
+export function SearchBar({ placeholder, Search, SetSearch }: SearchBarProps) {
   return (
     <Field className="max-w-sm ">
       <InputGroup className="bg-slate-200/50 dark:border-blue-500 border-blue-300 ">
@@ -16,6 +18,8 @@ export function SearchBar({ placeholder }: SearchBarProps) {
           id="inline-end"
           placeholder={placeholder}
           className="placeholder:text-gray-500"
+          value={Search}
+          onChange={(e) => SetSearch(e.target.value)}
         />
         <InputGroupAddon align="inline-end">
           <SearchIcon className="text-muted-foreground" />
