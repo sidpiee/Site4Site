@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import SearchResult from "@/components/ui/search-result";
+import Loding from "@/components/ui/loding-state";
 
 export const Route = createFileRoute("/anime/")({
   component: RouteComponent,
@@ -39,8 +40,14 @@ function RouteComponent() {
           Search={search}
           SetSearch={setSearch}
         />
+        {isLoading && <Loding />}
+        {isError && (
+          <p className="mt-5 text-red-500 font-semibold font-[Figtree] ">
+            {error.message}
+          </p>
+        )}
         {data?.data?.length > 0 && (
-          <div className="absolute top-full left-0 shadow-lg mt-2 z-20 min-w-sm max-h-96 overflow-y-auto no-scrollbar">
+          <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-100 overflow-y-auto no-scrollbar">
             {data.data.map((anime) => (
               <SearchResult
                 key={anime.mal_id}

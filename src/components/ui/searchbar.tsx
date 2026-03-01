@@ -20,6 +20,10 @@ export function SearchBar({ placeholder, Search, SetSearch }: SearchBarProps) {
           className="placeholder:text-gray-500"
           value={Search}
           onChange={(e) => SetSearch(e.target.value)}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
         />
         <InputGroupAddon align="inline-end">
           <SearchIcon className="text-muted-foreground" />
