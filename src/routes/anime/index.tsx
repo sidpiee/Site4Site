@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
+import SearchResult from "@/components/ui/search-result";
 
 export const Route = createFileRoute("/anime/")({
   component: RouteComponent,
@@ -12,9 +13,9 @@ export const Route = createFileRoute("/anime/")({
 
 function RouteComponent() {
   const [search, setSearch] = useState<string>("");
-  const debouncedSearch = useDebounce(search, 1000);
+  const debouncedSearch = useDebounce(search, 800);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["anime", debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
@@ -32,12 +33,23 @@ function RouteComponent() {
 
   return (
     <MainLayout>
-      <div className="mb-10">
+      <div className="mb-10 relative">
         <SearchBar
           placeholder="Death Note..."
           Search={search}
           SetSearch={setSearch}
         />
+        {data?.data?.length > 0 && (
+          <div className="absolute top-full left-0 shadow-lg mt-2 z-20 min-w-sm max-h-96 overflow-y-auto no-scrollbar">
+            {data.data.map((anime) => (
+              <SearchResult
+                key={anime.mal_id}
+                imgSrc={anime.images.jpg.large_image_url}
+                title={anime.title_english || anime.title}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <AnimeCard />
     </MainLayout>
