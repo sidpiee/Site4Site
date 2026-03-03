@@ -7,6 +7,8 @@ import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import SearchResult from "@/components/ui/search-result";
 import Loding from "@/components/ui/loding-state";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import AnimePopOver from "@/components/ui/anime-popover";
 
 export const Route = createFileRoute("/anime/")({
   component: RouteComponent,
@@ -14,6 +16,7 @@ export const Route = createFileRoute("/anime/")({
 
 function RouteComponent() {
   const [search, setSearch] = useState<string>("");
+  const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
   const debouncedSearch = useDebounce(search, 800);
 
   const { data, isLoading, isError, error } = useQuery({
@@ -57,11 +60,31 @@ function RouteComponent() {
                 key={anime.mal_id}
                 imgSrc={anime.images.jpg.large_image_url}
                 title={anime.title_english || anime.title}
+                onClick={() => {
+                  setSearch("");
+                  setSelectedAnime(anime);
+                }}
               />
             ))}
           </div>
         )}
       </div>
+      <Dialog
+        open={!!selectedAnime}
+        onOpenChange={(open) => {
+          if (!open) setSelectedAnime(null);
+        }}
+      >
+        <DialogContent className="p-0 overflow-hidden max-w-4xl">
+          {selectedAnime && (
+            <AnimePopOver
+              imgSrc={selectedAnime.images.jpg.large_image_url}
+              name={selectedAnime.title_english || selectedAnime.title}
+              totalEp={selectedAnime.episodes || 0}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
       <div className="mb-10">
         <section>
           <h1 className="text-6xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
