@@ -12,7 +12,7 @@ export default function SearchResult({ imgSrc, title }: SearchResultProps) {
           alt={title}
           className="object-cover w-18 h-full z-10 "
         />
-        <h1 className="font-[Figtree] tracking-tight font-semibold  antialiased text-md text-card-foreground">
+        <h1 className="font-[Figtree] tracking-tight font-semibold  antialiased text-md text-card-foreground pr-2">
           {title}
         </h1>
       </div>
