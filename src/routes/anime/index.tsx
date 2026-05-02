@@ -17,7 +17,7 @@ export const Route = createFileRoute("/anime/")({
 function RouteComponent() {
   const [search, setSearch] = useState<string>("");
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
-  const debouncedSearch = useDebounce(search, 800);
+  const debouncedSearch = useDebounce(search, 1000);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["anime", debouncedSearch],
@@ -27,7 +27,8 @@ function RouteComponent() {
       );
 
       if (!res.ok) {
-        throw new Error("Failed to fetch anime");
+        const error = await res.json();
+        throw new Error(error.message);
       }
 
       return res.json();
