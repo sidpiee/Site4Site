@@ -9,15 +9,21 @@ import SearchResult from "@/components/ui/search-result";
 import Loding from "@/components/ui/loding-state";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import AnimePopOver from "@/components/ui/anime-popover";
+import type { AnimeListItem } from "@/components/Types/anime";
 
 export const Route = createFileRoute("/anime/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const [animes, setAnimes] = useState<AnimeListItem[]>([]);
   const [search, setSearch] = useState<string>("");
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
-  const debouncedSearch = useDebounce(search, 1000);
+  const debouncedSearch = useDebounce(search, 1200);
+
+  function addAnime(anime: AnimeListItem): void {
+    setAnimes((prev) => [...prev, anime]);
+  }
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["anime", debouncedSearch],
@@ -25,7 +31,6 @@ function RouteComponent() {
       const res = await fetch(
         `${import.meta.env.VITE_ANIME_API_URL}/api/v1/anime?anime=${debouncedSearch}`,
       );
-
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.message);
@@ -35,7 +40,7 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
-
+  console.log(animes);
   return (
     <MainLayout>
       <div className="mb-10 relative">
@@ -56,7 +61,7 @@ function RouteComponent() {
         )}
         {data?.data?.length > 0 && (
           <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
-            {data.data.map((anime) => (
+            {data.data.map((anime: any) => (
               <SearchResult
                 key={anime.mal_id}
                 imgSrc={anime.images.jpg.large_image_url}
@@ -79,9 +84,9 @@ function RouteComponent() {
         <DialogContent className="p-0 overflow-hidden max-w-4xl">
           {selectedAnime && (
             <AnimePopOver
-              imgSrc={selectedAnime.images.jpg.large_image_url}
-              name={selectedAnime.title_english || selectedAnime.title}
-              totalEp={selectedAnime.episodes || 0}
+              selectedAnime={selectedAnime}
+              setSelectedAnime={setSelectedAnime}
+              addAnime={addAnime}
             />
           )}
         </DialogContent>

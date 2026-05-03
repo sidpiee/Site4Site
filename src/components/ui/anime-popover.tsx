@@ -12,15 +12,16 @@ import { Textarea } from "./textarea";
 import { ScrollArea } from "./scroll-area";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import type { AnimeListItem } from "../Types/anime";
 type AnimePopOverProps = {
-  imgSrc: string;
-  name: string;
-  totalEp: number;
+  selectedAnime: any;
+  addAnime: (anime: AnimeListItem) => void;
+  setSelectedAnime: (anime: any) => void;
 };
 export default function AnimePopOver({
-  imgSrc,
-  name,
-  totalEp,
+  selectedAnime,
+  addAnime,
+  setSelectedAnime,
 }: AnimePopOverProps) {
   const [status, setStatus] = useState<
     "Plan to watch" | "Watching" | "Completed"
@@ -29,14 +30,35 @@ export default function AnimePopOver({
   const [epWatched, setEpWatched] = useState<number>(0);
   const [rating, setRating] = useState<number | null>(null);
 
-  function saveDetails() {}
+  function saveDetails() {
+    const animeToAdd: AnimeListItem = {
+      mal_id: selectedAnime.mal_id,
+      title: selectedAnime.title,
+      title_english: selectedAnime.title_english,
+      images: selectedAnime.images,
+      episodes: selectedAnime.episodes,
+      genres: selectedAnime.genres,
+      status: status,
+      rating: rating,
+      episodesWatched: epWatched,
+      notes: note,
+    };
+    addAnime(animeToAdd);
+    setSelectedAnime(null);
+  }
 
   return (
     <div className="h-120 w-full flex justify-start items-start">
-      <img src={imgSrc} alt={name} className="h-full w-2/5 object-cover" />
+      <img
+        src={selectedAnime.images.jpg.large_image_url}
+        alt={selectedAnime.title_english || selectedAnime.title}
+        className="h-full w-2/5 object-cover"
+      />
 
       <div className=" flex flex-col gap-8 justify-start items-start px-3 py-6">
-        <h1 className="font-[Urbanist] font-bold text-md ">{name}</h1>
+        <h1 className="font-[Urbanist] font-bold text-md ">
+          {selectedAnime.title_english || selectedAnime.title}
+        </h1>
         <div className="flex gap-2">
           <button
             className={cn(
@@ -75,11 +97,13 @@ export default function AnimePopOver({
         <p className="flex font-medium items-center text-sm gap-2">
           Episodes Watched{" "}
           <EpWatched
-            totalEpisodes={totalEp}
+            totalEpisodes={selectedAnime.episodes || 0}
             value={epWatched}
             setEpWatched={setEpWatched}
           />{" "}
-          <span className="font-semibold text-lg">/{totalEp}</span>
+          <span className="font-semibold text-lg">
+            /{selectedAnime.episodes || 0}
+          </span>
         </p>
         <RatingSection value={rating} setRating={setRating} />
         <Textarea

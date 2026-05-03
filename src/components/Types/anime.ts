@@ -15,7 +15,7 @@ export type Anime = {
 };
 
 export type UserAnimeData = {
-  status: "watching" | "planned" | "completed";
+  status: "Watching" | "Plan to watch" | "Completed";
   rating: number | null;
   episodesWatched: number;
   notes: string;

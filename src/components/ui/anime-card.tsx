@@ -1,5 +1,15 @@
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Progress } from "@/components/ui/progress";
+type AnimeCardProps = {
+  img: string;
+  status: string;
+  name: string;
+  genre: string[];
+  rating: number;
+  totalEp: number;
+  epWatched: number;
+  note: string;
+};
 export default function AnimeCard() {
   return (
     <>
