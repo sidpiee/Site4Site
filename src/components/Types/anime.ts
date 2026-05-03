@@ -1,13 +1,13 @@
 export type Anime = {
   mal_id: number;
   title: string;
-  title_english: string | null;
+  title_english: string | undefined;
   images: {
     jpg: {
       large_image_url: string;
     };
   };
-  episodes: number | null;
+  episodes: number;
   genres: {
     mal_id: number;
     name: string;

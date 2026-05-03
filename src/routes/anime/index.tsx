@@ -25,6 +25,10 @@ function RouteComponent() {
     setAnimes((prev) => [...prev, anime]);
   }
 
+  const planned = animes.filter((a) => a.status === "Plan to watch");
+  const watching = animes.filter((a) => a.status === "Watching");
+  const completed = animes.filter((a) => a.status === "Completed");
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["anime", debouncedSearch],
     queryFn: async () => {
@@ -40,7 +44,6 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
-  console.log(animes);
   return (
     <MainLayout>
       <div className="mb-10 relative">
@@ -91,39 +94,52 @@ function RouteComponent() {
           )}
         </DialogContent>
       </Dialog>
-      <div className="mb-10">
-        <section>
-          <h1 className="text-6xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
-            Plan to Watch
-          </h1>
-          <div className="h-1 w-110 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
-          <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-            <AnimeCard />
-          </div>
-        </section>
-      </div>
-      <div className="mb-10">
-        <section>
-          <h1 className="text-6xl  text-transparent bg-linear-to-r from-indigo-500 to-indigo-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
-            Watching
-          </h1>
-          <div className="h-1 w-140 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
-          <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-            <AnimeCard />
-          </div>
-        </section>
-      </div>
-      <div className="mb-10">
-        <section>
-          <h1 className="text-6xl  text-transparent bg-linear-to-r from-emerald-500 to-emerald-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
-            Completed
-          </h1>
-          <div className="h-1 w-180 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
-          <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-            <AnimeCard />
-          </div>
-        </section>
-      </div>
+      {planned.length !== 0 && (
+        <div className="mb-10">
+          <section>
+            <h1 className="text-6xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+              Plan to Watch
+            </h1>
+            <div className="h-1 w-110 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+              {planned.map((a) => {
+                return <AnimeCard key={a.mal_id} anime={a} />;
+              })}
+            </div>
+          </section>
+        </div>
+      )}
+      {watching.length !== 0 && (
+        <div className="mb-10">
+          <section>
+            <h1 className="text-6xl  text-transparent bg-linear-to-r from-indigo-500 to-indigo-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+              Watching
+            </h1>
+            <div className="h-1 w-140 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+              {watching.map((a) => {
+                return <AnimeCard key={a.mal_id} anime={a} />;
+              })}
+            </div>
+          </section>
+        </div>
+      )}
+
+      {completed.length !== 0 && (
+        <div className="mb-10">
+          <section>
+            <h1 className="text-6xl  text-transparent bg-linear-to-r from-emerald-500 to-emerald-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+              Completed
+            </h1>
+            <div className="h-1 w-180 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+              {completed.map((a) => {
+                return <AnimeCard key={a.mal_id} anime={a} />;
+              })}
+            </div>
+          </section>
+        </div>
+      )}
     </MainLayout>
   );
 }

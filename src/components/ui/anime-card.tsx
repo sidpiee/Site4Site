@@ -1,37 +1,43 @@
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Progress } from "@/components/ui/progress";
+import type { AnimeListItem } from "../Types/anime";
+import { cn } from "@/lib/utils";
 type AnimeCardProps = {
-  img: string;
-  status: string;
-  name: string;
-  genre: string[];
-  rating: number;
-  totalEp: number;
-  epWatched: number;
-  note: string;
+  anime: AnimeListItem;
 };
-export default function AnimeCard() {
+export default function AnimeCard({ anime }: AnimeCardProps) {
+  const notes = anime.notes ?? "No notes added";
   return (
     <>
       <div className="w-75 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative ">
         <img
-          src="https://imgs.search.brave.com/jizepV3veJvMeUAlKq4HVF3XQZs_0MsZiSGBwBbNuA4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1QlpEa3dOamMw/TldFdE56SmxPQzAw/TjJZd0xUazRNamt0/WkdGbFpERTJZMlF6/T1dJMFhrRXlYa0Zx/Y0djQC5qcGc"
-          alt=""
+          src={anime.images.jpg.large_image_url}
+          alt={anime.title_english || anime.title}
           className="object-cover h-100"
         />
 
-        <div className="absolute top-4 right-4  bg-indigo-500/90 px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold">
-          Watching
+        <div
+          className={cn(
+            "absolute top-2 right-2 px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold border-2 border-white/50",
+            anime.status === "Plan to watch" && "bg-violet-500",
+            anime.status === "Completed" && "bg-emerald-500",
+            anime.status === "Watching" && "bg-indigo-500",
+          )}
+        >
+          {anime.status}
         </div>
         <div className="mt-3 flex flex-col gap-4 px-2 text-sm justify-center z-10">
-          <h1 className="text-center text-2xl text-card-foreground font-extrabold font-[Urbanist] truncate">
-            Spy X Family <span className="text-xs">(Season 1)</span>
+          <h1 className="text-center text-lg text-card-foreground font-extrabold font-[Urbanist] ">
+            {anime.title_english || anime.title}
           </h1>
-          <div className="flex gap-2 mt-2">
-            <GenrePills genre="comedy" />
-            <GenrePills genre="Sci-Fi" />
-          </div>
-          <Star />
+          {anime.genres?.length > 0 && (
+            <div className="flex gap-2 mt-2 flex-wrap">
+              {anime.genres.map((g) => (
+                <GenrePills key={g.mal_id} genre={g.name} />
+              ))}
+            </div>
+          )}
+          <Star rating={anime.rating} />
           <Field className="w-full max-w-sm">
             <FieldLabel
               htmlFor="episodes-watched"
@@ -40,14 +46,19 @@ export default function AnimeCard() {
               <span className="font-[Urbanist] font-semibold">
                 Episodes Watched
               </span>
-              <span className=" font-[Urbanist] font-semibold">11/13</span>
+              <span className=" font-[Urbanist] font-semibold">
+                {anime.episodesWatched}/{anime.episodes}
+              </span>
             </FieldLabel>
-            <Progress value={(11 * 100) / 13} id="episodes-watched" />
+            <Progress
+              value={(anime.episodesWatched * 100) / (anime.episodes ?? 1)}
+              id="episodes-watched"
+            />
           </Field>
 
           <div className="mt-2 p-3 bg-muted/50 rounded-xl border-l-4 border-primary">
             <p className="text-sm italic text-muted-foreground leading-relaxed">
-              Need to complete this before exams!!!
+              {notes}
             </p>
           </div>
         </div>
@@ -66,7 +77,8 @@ function GenrePills({ genre }: { genre: string }) {
   );
 }
 
-function Star() {
+function Star({ rating }: { rating: number | null }) {
+  const safeRating = rating ?? 0;
   return (
     <>
       <div className="flex items-center gap-1">
@@ -74,7 +86,9 @@ function Star() {
           <span
             key={star}
             className={`text-2xl  ${
-              star <= 4 ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"
+              star <= safeRating
+                ? "text-yellow-400"
+                : "text-gray-300 dark:text-gray-600"
             }`}
           >
             ★
