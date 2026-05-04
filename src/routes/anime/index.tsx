@@ -62,6 +62,23 @@ function RouteComponent() {
             {error.message}
           </p>
         )}
+        {animes.length === 0 && (
+          <div className="mt-30 flex flex-col items-center justify-center text-center">
+            <div className="text-6xl mb-4">🎬</div>
+
+            <p className="text-2xl font-bold text-foreground">
+              Your anime list is empty
+            </p>
+
+            <p className="text-muted-foreground mt-2 max-w-md">
+              Start building your collection by searching and adding anime.
+            </p>
+
+            <p className="text-sm text-muted-foreground mt-1">
+              Track what you're watching, planning, and completed.
+            </p>
+          </div>
+        )}
         {data?.data?.length > 0 && (
           <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
             {data.data.map((anime: any) => (
