@@ -1,3 +1,4 @@
+import no_image_found from "@/assets/pics/Image-Not-Found.jpg";
 type SearchResultProps = {
   imgSrc: string;
   title: string;
@@ -19,7 +20,11 @@ export default function SearchResult({
           src={imgSrc}
           alt={title}
           className="object-cover w-18 h-full z-10 "
+          onError={(e) => {
+            e.currentTarget.src = no_image_found;
+          }}
         />
+
         <h1 className="font-[Figtree] tracking-tight font-semibold  antialiased text-md text-card-foreground pr-2">
           {title}
         </h1>

@@ -5,6 +5,8 @@ import { SearchBar } from "@/components/ui/searchbar";
 import MovieCard from "@/components/ui/movie-card";
 import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
+import Loding from "@/components/ui/loding-state";
+import SearchResult from "@/components/ui/search-result";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
@@ -47,19 +49,39 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
-
   const filteredMovies =
     filter === "all" ? movies : movies.filter((m) => m.status === filter);
   return (
     <MainLayout>
-      <div className="flex justify-between">
+      <div className="flex justify-between relative ">
         <SearchBar
           placeholder="Titanic..."
           Search={search}
           SetSearch={setSearch}
         />
         <BtnGroup active={filter} setActive={setFilter} />
+        {data?.data?.Search?.length !== 0 && (
+          <div className=" shadow-lg absolute mt-9 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
+            {data?.data?.Search?.map((movie) => (
+              <SearchResult
+                imgSrc={movie.Poster}
+                title={movie.Title}
+                key={movie.imdbID}
+              />
+            ))}
+          </div>
+        )}
+        {isLoading && (
+          <div className="absolute mt-9 shadow-lg z-20 min-w-sm">
+            <Loding />
+          </div>
+        )}
       </div>
+      {isError && (
+        <p className="mt-5 text-center w-100 text-red-500 font-semibold font-[Figtree] ">
+          Movie not found!
+        </p>
+      )}
       <div className="grid grid-cols-3 gap-6 mt-6">
         {filteredMovies.map((m) => (
           <MovieCard movie={m} key={m.id} />
