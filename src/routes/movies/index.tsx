@@ -3,6 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import MainLayout from "@/components/Layout/MainLayout";
 import { SearchBar } from "@/components/ui/searchbar";
 import MovieCard from "@/components/ui/movie-card";
+import useDebounce from "@/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
@@ -25,15 +27,37 @@ type BtnGroupProps = {
   setActive: (value: Filter) => void;
 };
 function RouteComponent() {
+  const [search, setSearch] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
+  const debouncedSearch = useDebounce(search, 1200);
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["movie", debouncedSearch],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie?movie=${encodeURIComponent(debouncedSearch)}`,
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+    enabled: debouncedSearch.trim().length > 0,
+  });
 
   const filteredMovies =
     filter === "all" ? movies : movies.filter((m) => m.status === filter);
   return (
     <MainLayout>
       <div className="flex justify-between">
-        <SearchBar placeholder="Titanic..." />
+        <SearchBar
+          placeholder="Titanic..."
+          Search={search}
+          SetSearch={setSearch}
+        />
         <BtnGroup active={filter} setActive={setFilter} />
       </div>
       <div className="grid grid-cols-3 gap-6 mt-6">

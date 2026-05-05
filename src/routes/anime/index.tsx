@@ -33,7 +33,7 @@ function RouteComponent() {
     queryKey: ["anime", debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_ANIME_API_URL}/api/v1/anime?anime=${debouncedSearch}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/anime?anime=${debouncedSearch}`,
       );
       if (!res.ok) {
         const error = await res.json();
@@ -63,7 +63,7 @@ function RouteComponent() {
           </p>
         )}
         {animes.length === 0 && (
-          <div className="mt-30 flex flex-col items-center justify-center text-center">
+          <div className="w-full mt-30 flex flex-col items-center justify-center text-center absolute">
             <div className="text-6xl mb-4">🎬</div>
 
             <p className="text-2xl font-bold text-foreground">
