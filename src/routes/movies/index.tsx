@@ -7,6 +7,9 @@ import useDebounce from "@/hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import Loding from "@/components/ui/loding-state";
 import SearchResult from "@/components/ui/search-result";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import MoviePopOver from "@/components/ui/movie-popover";
+import type { OMDbMovie } from "@/components/Types/movie";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
@@ -32,9 +35,9 @@ function RouteComponent() {
   const [search, setSearch] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
-  const debouncedSearch = useDebounce(search, 1200);
-
-  const { data, isLoading, isError, error } = useQuery({
+  const [selectedMovie, setSelectedMovie] = useState<OMDbMovie | null>(null);
+  const debouncedSearch = useDebounce(search, 800);
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["movie", debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
@@ -60,13 +63,17 @@ function RouteComponent() {
           SetSearch={setSearch}
         />
         <BtnGroup active={filter} setActive={setFilter} />
-        {data?.data?.Search?.length !== 0 && (
+        {data?.data?.Search?.length > 0 && (
           <div className=" shadow-lg absolute mt-9 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
-            {data?.data?.Search?.map((movie) => (
+            {data?.data?.Search?.map((movie: OMDbMovie) => (
               <SearchResult
                 imgSrc={movie.Poster}
                 title={movie.Title}
                 key={movie.imdbID}
+                onClick={() => {
+                  setSearch("");
+                  setSelectedMovie(movie);
+                }}
               />
             ))}
           </div>
@@ -82,6 +89,16 @@ function RouteComponent() {
           Movie not found!
         </p>
       )}
+      <Dialog
+        open={!!selectedMovie}
+        onOpenChange={(open) => {
+          if (!open) setSelectedMovie(null);
+        }}
+      >
+        <DialogContent className="p-0 overflow-hidden max-w-4xl">
+          {selectedMovie && <MoviePopOver movie={selectedMovie} />}
+        </DialogContent>
+      </Dialog>
       <div className="grid grid-cols-3 gap-6 mt-6">
         {filteredMovies.map((m) => (
           <MovieCard movie={m} key={m.id} />
