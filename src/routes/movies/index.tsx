@@ -35,7 +35,7 @@ function RouteComponent() {
   const [search, setSearch] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
-  const [selectedMovie, setSelectedMovie] = useState<OMDbMovie | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<string>("");
   const debouncedSearch = useDebounce(search, 800);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["movie", debouncedSearch],
@@ -52,8 +52,24 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
+  const particularMovieQuery = useQuery({
+    queryKey: ["movie-details", selectedMovie],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/this?movie=${encodeURIComponent(selectedMovie)}`,
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+    enabled: !!selectedMovie,
+  });
   const filteredMovies =
     filter === "all" ? movies : movies.filter((m) => m.status === filter);
+  console.log(particularMovieQuery.data);
   return (
     <MainLayout>
       <div className="flex justify-between relative ">
@@ -65,14 +81,14 @@ function RouteComponent() {
         <BtnGroup active={filter} setActive={setFilter} />
         {data?.data?.Search?.length > 0 && (
           <div className=" shadow-lg absolute mt-9 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
-            {data?.data?.Search?.map((movie: OMDbMovie) => (
+            {data?.data?.Search?.map((movie: any) => (
               <SearchResult
                 imgSrc={movie.Poster}
                 title={movie.Title}
                 key={movie.imdbID}
                 onClick={() => {
                   setSearch("");
-                  setSelectedMovie(movie);
+                  setSelectedMovie(movie.imdbID);
                 }}
               />
             ))}
@@ -89,16 +105,18 @@ function RouteComponent() {
           Movie not found!
         </p>
       )}
-      <Dialog
-        open={!!selectedMovie}
-        onOpenChange={(open) => {
-          if (!open) setSelectedMovie(null);
-        }}
-      >
-        <DialogContent className="p-0 overflow-hidden max-w-4xl">
-          {selectedMovie && <MoviePopOver movie={selectedMovie} />}
-        </DialogContent>
-      </Dialog>
+      {particularMovieQuery.data && (
+        <Dialog
+          open={!!selectedMovie}
+          onOpenChange={(open) => {
+            if (!open) setSelectedMovie("");
+          }}
+        >
+          <DialogContent className="p-0 overflow-hidden max-w-4xl">
+            <MoviePopOver movie={particularMovieQuery.data.data} />
+          </DialogContent>
+        </Dialog>
+      )}
       <div className="grid grid-cols-3 gap-6 mt-6">
         {filteredMovies.map((m) => (
           <MovieCard movie={m} key={m.id} />

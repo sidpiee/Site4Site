@@ -7,10 +7,13 @@ export type OMDbMovie = {
   Runtime: string;
   imdbRating: string;
   Plot: string;
+  Ratings?: {
+    Source: string;
+    Value: string;
+  }[];
 };
 export type UserMovieData = {
   status: "watched" | "plan";
-  personalRating: number | null;
   notes: string;
 };
 export type MovieListItem = OMDbMovie & UserMovieData;
