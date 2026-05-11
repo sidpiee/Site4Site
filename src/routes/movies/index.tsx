@@ -9,31 +9,20 @@ import Loding from "@/components/ui/loding-state";
 import SearchResult from "@/components/ui/search-result";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import MoviePopOver from "@/components/ui/movie-popover";
-import type { OMDbMovie } from "@/components/Types/movie";
+import type { MovieListItem, OMDbMovie } from "@/components/Types/movie";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
 });
 type Filter = "watched" | "all" | "plan";
-type Movie = {
-  id: string;
-  title: string;
-  year: number;
-  poster: string;
-  genre: string[];
-  runtime: number;
-  imdbRating: number;
-  personalRating?: number;
-  status: "watched" | "plan";
-  description?: string;
-};
+
 type BtnGroupProps = {
   active: Filter;
   setActive: (value: Filter) => void;
 };
 function RouteComponent() {
   const [search, setSearch] = useState<string>("");
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<MovieListItem[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedMovie, setSelectedMovie] = useState<string>("");
   const debouncedSearch = useDebounce(search, 800);
@@ -119,7 +108,7 @@ function RouteComponent() {
       )}
       <div className="grid grid-cols-3 gap-6 mt-6">
         {filteredMovies.map((m) => (
-          <MovieCard movie={m} key={m.id} />
+          <MovieCard movie={m} key={m.imdbID} />
         ))}
       </div>
       {filteredMovies.length === 0 && (

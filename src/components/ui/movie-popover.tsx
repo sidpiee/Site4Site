@@ -1,6 +1,7 @@
 import { Check, Star } from "lucide-react";
 import type { OMDbMovie } from "../Types/movie";
 import IMDB from "@/assets/pics/imdb-logo.png";
+import no_image_found from "@/assets/pics/Image-Not-Found.jpg";
 import RottenTomatoes from "@/assets/pics/rotten_tomatoes.jpg";
 import Length from "@/assets/pics/length.webp";
 import { Button } from "./button";
@@ -14,13 +15,20 @@ type movieCardProps = {
 export default function MoviePopOver({ movie }: movieCardProps) {
   const rottenTomatoes =
     movie?.Ratings?.find((r) => r.Source === "Rotten Tomatoes")?.Value || "N/A";
-  const genres = movie.Genre.split(",");
+  const genres = movie.Genre.split(",").map((g) => g.trim());
   const [note, setNote] = useState<string>("");
   const [status, setStatus] = useState<"watched" | "plan">("watched");
   return (
     <>
       <div className="bg-background h-140 w-full flex">
-        <img src={movie.Poster} alt="" className="object-cover w-1/3 h-full" />
+        <img
+          src={movie.Poster}
+          alt=""
+          className="object-cover w-[35%] h-full"
+          onError={(e) => {
+            e.currentTarget.src = no_image_found;
+          }}
+        />
         <div className="flex flex-col flex-1 items-start pt-10 gap-2">
           <p className="font-[Urbanist] text-center w-full font-bold text-2xl">
             {movie.Title} ({movie.Year})
@@ -48,10 +56,12 @@ export default function MoviePopOver({ movie }: movieCardProps) {
           </div>
           <div className="flex pl-5 gap-2 flex-wrap">
             {genres.map((g) => (
-              <GenrePills genre={g} />
+              <GenrePills key={g} genre={g} />
             ))}
           </div>
-          <p className="px-5 text-sm  italic">"{movie.Plot}"</p>
+          <p className="px-5 text-sm  italic leading-relaxed text-muted-foreground">
+            "{movie.Plot}"
+          </p>
           <div className="flex gap-2 px-4 justify-around w-full mt-3 pb-2">
             <Button className="m-0" onClick={() => setStatus("watched")}>
               Watched{status == "watched" && <Check />}
@@ -60,12 +70,14 @@ export default function MoviePopOver({ movie }: movieCardProps) {
               Plan to watch{status == "plan" && <Check />}
             </Button>
           </div>
-          <Textarea
-            value={note}
-            placeholder="Might have to binge watch this one..."
-            className=" border-black/20 border dark:border-white/20  bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50 mb-2"
-            onChange={(e) => setNote(e.target.value)}
-          />
+          <div className="w-full px-2">
+            <Textarea
+              value={note}
+              placeholder="Might have to binge watch this one..."
+              className=" border-black/20 border dark:border-white/20  bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50 mb-2"
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </div>
           <div className="flex justify-center w-full">
             <Button className="dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2">
               Save Changes
