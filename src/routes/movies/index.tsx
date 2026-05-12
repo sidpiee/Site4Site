@@ -9,7 +9,7 @@ import Loding from "@/components/ui/loding-state";
 import SearchResult from "@/components/ui/search-result";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import MoviePopOver from "@/components/ui/movie-popover";
-import type { MovieListItem, OMDbMovie } from "@/components/Types/movie";
+import type { MovieListItem } from "@/components/Types/movie";
 
 export const Route = createFileRoute("/movies/")({
   component: RouteComponent,
@@ -56,6 +56,9 @@ function RouteComponent() {
     },
     enabled: !!selectedMovie,
   });
+  function addMovie(movie: MovieListItem) {
+    setMovies((prev) => [...prev, movie]);
+  }
   const filteredMovies =
     filter === "all" ? movies : movies.filter((m) => m.status === filter);
   console.log(particularMovieQuery.data);
@@ -102,11 +105,15 @@ function RouteComponent() {
           }}
         >
           <DialogContent className="p-0 overflow-hidden max-w-4xl">
-            <MoviePopOver movie={particularMovieQuery.data.data} />
+            <MoviePopOver
+              movie={particularMovieQuery.data.data}
+              setSelectedMovie={setSelectedMovie}
+              addMovie={addMovie}
+            />
           </DialogContent>
         </Dialog>
       )}
-      <div className="grid grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-3  mt-6">
         {filteredMovies.map((m) => (
           <MovieCard movie={m} key={m.imdbID} />
         ))}

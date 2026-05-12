@@ -1,5 +1,5 @@
-import { Check, Star } from "lucide-react";
-import type { OMDbMovie } from "../Types/movie";
+import { Check } from "lucide-react";
+import type { MovieListItem, OMDbMovie } from "../Types/movie";
 import IMDB from "@/assets/pics/imdb-logo.png";
 import no_image_found from "@/assets/pics/Image-Not-Found.jpg";
 import RottenTomatoes from "@/assets/pics/rotten_tomatoes.jpg";
@@ -8,22 +8,37 @@ import { Button } from "./button";
 import { Textarea } from "./textarea";
 import { useState } from "react";
 
-type movieCardProps = {
+type MovieCardProps = {
   movie: OMDbMovie;
+  setSelectedMovie: (s: string) => void;
+  addMovie: (movie: MovieListItem) => void;
 };
 
-export default function MoviePopOver({ movie }: movieCardProps) {
+export default function MoviePopOver({
+  movie,
+  setSelectedMovie,
+  addMovie,
+}: MovieCardProps) {
   const rottenTomatoes =
     movie?.Ratings?.find((r) => r.Source === "Rotten Tomatoes")?.Value || "N/A";
   const genres = movie.Genre.split(",").map((g) => g.trim());
   const [note, setNote] = useState<string>("");
   const [status, setStatus] = useState<"watched" | "plan">("watched");
+  function saveDetails() {
+    const movieToAdd: MovieListItem = {
+      ...movie,
+      status,
+      notes: note,
+    };
+    addMovie(movieToAdd);
+    setSelectedMovie("");
+  }
   return (
     <>
       <div className="bg-background h-140 w-full flex">
         <img
           src={movie.Poster}
-          alt=""
+          alt={movie.Title}
           className="object-cover w-[35%] h-full"
           onError={(e) => {
             e.currentTarget.src = no_image_found;
@@ -59,15 +74,21 @@ export default function MoviePopOver({ movie }: movieCardProps) {
               <GenrePills key={g} genre={g} />
             ))}
           </div>
-          <p className="px-5 text-sm  italic leading-relaxed text-muted-foreground">
+          <p className="px-5 text-xs font-semibold  italic leading-relaxed text-muted-foreground">
             "{movie.Plot}"
           </p>
           <div className="flex gap-2 px-4 justify-around w-full mt-3 pb-2">
-            <Button className="m-0" onClick={() => setStatus("watched")}>
-              Watched{status == "watched" && <Check />}
+            <Button
+              className="m-0 cursor-pointer"
+              onClick={() => setStatus("watched")}
+            >
+              Watched{status === "watched" && <Check />}
             </Button>
-            <Button className="m-0" onClick={() => setStatus("plan")}>
-              Plan to watch{status == "plan" && <Check />}
+            <Button
+              className="m-0 cursor-pointer"
+              onClick={() => setStatus("plan")}
+            >
+              Plan to watch{status === "plan" && <Check />}
             </Button>
           </div>
           <div className="w-full px-2">
@@ -79,7 +100,10 @@ export default function MoviePopOver({ movie }: movieCardProps) {
             />
           </div>
           <div className="flex justify-center w-full">
-            <Button className="dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2">
+            <Button
+              className=" cursor-pointer dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2 hover:dark:bg-indigo-950 hover:scale-110"
+              onClick={saveDetails}
+            >
               Save Changes
             </Button>
           </div>
