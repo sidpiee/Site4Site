@@ -59,9 +59,21 @@ function RouteComponent() {
   function addMovie(movie: MovieListItem) {
     setMovies((prev) => [...prev, movie]);
   }
+  function changeStatus(id: string) {
+  setMovies((prev) =>
+    prev.map((m) =>
+      m.imdbID === id
+        ? {
+            ...m,
+            status: m.status === "plan" ? "watched" : "plan",
+          }
+        : m
+    )
+  );
+}
   const filteredMovies =
     filter === "all" ? movies : movies.filter((m) => m.status === filter);
-  console.log(particularMovieQuery.data);
+  
   return (
     <MainLayout>
       <div className="flex justify-between relative ">
@@ -115,7 +127,7 @@ function RouteComponent() {
       )}
       <div className="grid grid-cols-3  mt-6">
         {filteredMovies.map((m) => (
-          <MovieCard movie={m} key={m.imdbID} />
+          <MovieCard movie={m} key={m.imdbID} changeStatus = {changeStatus} />
         ))}
       </div>
       {filteredMovies.length === 0 && (
@@ -134,15 +146,15 @@ function RouteComponent() {
 
 function BtnGroup({ active, setActive }: BtnGroupProps) {
   const baseStyle =
-    "px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-300 cursor-pointer";
+    "px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 cursor-pointer";
 
   const activeStyle =
     "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-md";
 
-  const inactiveStyle = "text-white/70 hover:text-white";
+  const inactiveStyle = "dark:text-white text-black hover:text-slate-400 dark:hover:text-slate-400";
 
   return (
-    <div className="flex dark:bg-indigo-950 bg-blue-400/50 rounded-3xl p-2 border border-white/20 gap-5 w-fit">
+    <div className="flex dark:bg-card  rounded-3xl p-2 border border-black/40 dark:border-white/20 gap-5 w-fit">
       <button
         onClick={() => setActive("watched")}
         className={`${baseStyle} ${

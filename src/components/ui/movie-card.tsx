@@ -4,7 +4,7 @@ import { Check, Plus } from "lucide-react";
 import type { MovieListItem } from "../Types/movie";
 import noImage from "@/assets/pics/No_image_Moviecard.png";
 
-export default function MovieCard({ movie }: { movie: MovieListItem }) {
+export default function MovieCard({ movie , changeStatus }: { movie: MovieListItem , changeStatus : ( id : string)=>void}) {
   const watched = movie.status === "watched";
   return (
     <>
@@ -17,6 +17,9 @@ export default function MovieCard({ movie }: { movie: MovieListItem }) {
             e.currentTarget.src = noImage;
           }}
         />
+        <div className="bg-background absolute right-1 top-2 px-2 py-1 rounded-xl dark:border-white/50 border border-black ">
+          {movie.status === "plan" ? "Plan to watch" : "Watched"}
+        </div>
         <div className="flex justify-between px-2 items-center">
           <h1 className="font-bold text-center my-2 font-[Urbanist]">
             {movie.Title} ({movie.Year})
@@ -25,6 +28,7 @@ export default function MovieCard({ movie }: { movie: MovieListItem }) {
             size={"icon-sm"}
             variant={"secondary"}
             className="cursor-pointer"
+            onClick={() => changeStatus(movie.imdbID)}
           >
             {watched ? <Check /> : <Plus />}
           </Button>
