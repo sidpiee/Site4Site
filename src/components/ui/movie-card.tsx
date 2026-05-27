@@ -38,7 +38,7 @@ export default function MovieCard({ movie , changeStatus }: { movie: MovieListIt
           <span className=""> {movie.imdbRating}⭐</span>
         </div>
         <p className="mx-2 font-[Figtree]">
-          {movie.Runtime} min • {movie.Genre}
+          {movie.Runtime}  • {movie.Genre}
         </p>
         {movie.Plot && (
           <p className="mx-2 text-sm leading-relaxed text-muted-foreground font-bold italic">

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -7,12 +7,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "./textarea";
-import { ScrollArea } from "./scroll-area";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import type { AnimeListItem } from "../Types/anime";
+} from '@/components/ui/select';
+import { Textarea } from './textarea';
+import { ScrollArea } from './scroll-area';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import type { AnimeListItem } from '../Types/anime';
 type AnimePopOverProps = {
   selectedAnime: any;
   addAnime: (anime: AnimeListItem) => void;
@@ -24,9 +24,9 @@ export default function AnimePopOver({
   setSelectedAnime,
 }: AnimePopOverProps) {
   const [status, setStatus] = useState<
-    "Plan to watch" | "Watching" | "Completed"
-  >("Watching");
-  const [note, setNote] = useState<string>("");
+    'Plan to watch' | 'Watching' | 'Completed'
+  >('Watching');
+  const [note, setNote] = useState<string>('');
   const [epWatched, setEpWatched] = useState<number>(0);
   const [rating, setRating] = useState<number | null>(null);
 
@@ -62,45 +62,45 @@ export default function AnimePopOver({
         <div className="flex gap-2">
           <button
             className={cn(
-              "dark:bg-indigo-600 bg-indigo-300 cursor-pointer  border border-black/40 dark:border-white  px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold",
-              status === "Watching"
-                ? "dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] scale-110"
-                : "opacity-60",
+              'dark:bg-indigo-600 bg-indigo-300 cursor-pointer  border border-black/40 dark:border-white  px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold',
+              status === 'Watching'
+                ? 'dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] scale-110'
+                : 'opacity-60',
             )}
-            onClick={() => setStatus("Watching")}
+            onClick={() => setStatus('Watching')}
           >
             Watching
           </button>
           <button
             className={cn(
-              "dark:bg-blue-600 bg-blue-300 cursor-pointer px-2 py-1 border border-black/40 dark:border-white  text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold",
-              status === "Plan to watch"
-                ? "shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] scale-110"
-                : "opacity-60",
+              'dark:bg-blue-600 bg-blue-300 cursor-pointer px-2 py-1 border border-black/40 dark:border-white  text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold',
+              status === 'Plan to watch'
+                ? 'shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] scale-110'
+                : 'opacity-60',
             )}
-            onClick={() => setStatus("Plan to watch")}
+            onClick={() => setStatus('Plan to watch')}
           >
             Plan to Watch
           </button>
           <button
             className={cn(
-              "dark:bg-emerald-600 bg-emerald-300 px-2 cursor-pointer border border-black/40 dark:border-white py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold",
-              status === "Completed"
-                ? " shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] scale-110"
-                : "opacity-60",
+              'dark:bg-emerald-600 bg-emerald-300 px-2 cursor-pointer border border-black/40 dark:border-white py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold',
+              status === 'Completed'
+                ? ' shadow-[inset_0_2px_4px_rgba(255,255,255,0.7)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] scale-110'
+                : 'opacity-60',
             )}
-            onClick={() => setStatus("Completed")}
+            onClick={() => setStatus('Completed')}
           >
             Completed
           </button>
         </div>
         <p className="flex font-medium items-center text-sm gap-2">
-          Episodes Watched{" "}
+          Episodes Watched{' '}
           <EpWatched
             totalEpisodes={selectedAnime.episodes || 0}
             value={epWatched}
             setEpWatched={setEpWatched}
-          />{" "}
+          />{' '}
           <span className="font-semibold text-lg">
             /{selectedAnime.episodes || 0}
           </span>
@@ -162,8 +162,8 @@ function RatingSection({
   return (
     <>
       <Select
-        value={value === null ? "0" : String(value)}
-        onValueChange={(val) => setRating(val === "0" ? null : Number(val))}
+        value={value === null ? '0' : String(value)}
+        onValueChange={(val) => setRating(val === '0' ? null : Number(val))}
       >
         <SelectTrigger className="w-full  max-w-48 bg-gray-200/80">
           <SelectValue />

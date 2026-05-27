@@ -146,7 +146,7 @@ function RouteComponent() {
 
 function BtnGroup({ active, setActive }: BtnGroupProps) {
   const baseStyle =
-    "px-3 py-2 rounded-2xl text-sm font-medium transition-all duration-200 cursor-pointer";
+    "px-3 py-2 rounded-3xl text-sm font-medium transition-all duration-200 cursor-pointer";
 
   const activeStyle =
     "bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-md";
@@ -154,7 +154,7 @@ function BtnGroup({ active, setActive }: BtnGroupProps) {
   const inactiveStyle = "dark:text-white text-black hover:text-slate-400 dark:hover:text-slate-400";
 
   return (
-    <div className="flex dark:bg-card  rounded-3xl p-2 border border-black/40 dark:border-white/20 gap-5 w-fit">
+    <div className="flex dark:bg-card  rounded-3xl  border border-black/40 dark:border-white/20 gap-5 w-fit">
       <button
         onClick={() => setActive("watched")}
         className={`${baseStyle} ${
