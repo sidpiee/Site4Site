@@ -21,10 +21,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function GamePopOver() {
   const [rating, setRating] = useState<number | null>(null);
   const [note, setNote] = useState<string>('');
+  const [status, setStatus] = useState<
+    'playing' | 'completed' | 'dropped' | 'wishlist'
+  >('playing');
+  const selectedStatus =
+    'scale-120 drop-shadow-md drop-shadow-white/20 border border-white';
+  const [favourite, setFavourite] = useState<boolean>(false);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -52,9 +59,14 @@ export default function GamePopOver() {
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-full hover:bg-white/10"
+                className="rounded-full hover:bg-white/10 cursor-pointer"
+                onClick={() => setFavourite((prev) => !prev)}
               >
-                <Heart className="size-5" />
+                {!favourite ? (
+                  <Heart className="size-5 fill-white" />
+                ) : (
+                  <Heart className="size-5" />
+                )}
               </Button>
             </div>
 
@@ -79,16 +91,40 @@ export default function GamePopOver() {
               </div>
             </div>
             <div className="flex justify-around items-center">
-              <button className=" cursor-pointer bg-linear-to-r from bg-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold">
+              <button
+                className={cn(
+                  'cursor-pointer bg-linear-to-r from bg-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+                  status === 'playing' && selectedStatus,
+                )}
+                onClick={() => setStatus('playing')}
+              >
                 Playing
               </button>
-              <button className=" cursor-pointer bg-linear-to-r from bg-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold">
+              <button
+                className={cn(
+                  ' cursor-pointer bg-linear-to-r from bg-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+                  status === 'completed' && selectedStatus,
+                )}
+                onClick={() => setStatus('completed')}
+              >
                 Completed
               </button>
-              <button className=" cursor-pointer bg-linear-to-r from bg-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold">
+              <button
+                className={cn(
+                  ' cursor-pointer bg-linear-to-r from bg-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+                  status === 'dropped' && selectedStatus,
+                )}
+                onClick={() => setStatus('dropped')}
+              >
                 Dropped
               </button>
-              <button className=" cursor-pointer bg-linear-to-r from bg-yellow-400 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold">
+              <button
+                className={cn(
+                  ' cursor-pointer bg-linear-to-r from bg-yellow-300 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+                  status === 'wishlist' && selectedStatus,
+                )}
+                onClick={() => setStatus('wishlist')}
+              >
                 Wishlist
               </button>
             </div>
