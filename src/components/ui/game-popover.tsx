@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import {
   CalendarDays,
+  ChevronsLeft,
+  ChevronsRight,
   Gamepad2,
   Heart,
   NotebookText,
@@ -22,6 +24,8 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { GameListItem } from '../Types/game';
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 type gamePopOverProps = {
   game: GameListItem;
 };
@@ -35,7 +39,8 @@ export default function GamePopOver({ game }: gamePopOverProps) {
   const selectedStatus =
     'scale-125 drop-shadow-md drop-shadow-white/20 border border-white';
   const [favourite, setFavourite] = useState<boolean>(false);
-  const { data, isError, error } = useQuery({
+  const [screenshotIndex, setScreenshotIndex] = useState<number>(-1);
+  const { data } = useQuery({
     queryKey: ['game-trailer', game.id],
     queryFn: async () => {
       const res = await fetch(
@@ -51,17 +56,72 @@ export default function GamePopOver({ game }: gamePopOverProps) {
     },
     enabled: !!game?.id,
   });
-  console.log(data);
-  console.log('hello');
+  const screenshotQuery = useQuery({
+    queryKey: ['game-screenshots', game.id],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/this/screenshots?id=${game.id}`,
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+    enabled: !!game?.id,
+  });
+  const screenshots =
+    screenshotQuery.data?.data?.results?.map(
+      (s: { id: number; image: string }) => s.image,
+    ) || [];
   return (
     <div className="relative min-h-160 w-full">
       <img
-        src={game.background_image}
+        src={
+          screenshotIndex === -1
+            ? game.background_image
+            : screenshots[screenshotIndex]
+        }
         alt="Elden Ring"
         className="absolute inset-0 w-full h-[45%] object-cover"
       />
-
-      <div className="hidden dark:block absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827]" />
+      <Button
+        variant="ghost"
+        className="absolute z-20 top-35 right-0 hover:bg-white/20 cursor-pointer"
+        onClick={() =>
+          setScreenshotIndex((prev) => {
+            if (screenshots.length === 0) {
+              toast('No screenshot avaliable');
+              return -1;
+            } else {
+              if (prev === screenshots.length - 1) return -1;
+              else return prev + 1;
+            }
+          })
+        }
+      >
+        <ChevronsRight className="size-10" />
+      </Button>
+      <Button
+        variant="ghost"
+        className="absolute top-35 z-20 left-0 hover:bg-white/20 cursor-pointer"
+        onClick={() =>
+          setScreenshotIndex((prev) => {
+            if (screenshots.length === 0) {
+              toast('No screenshot avaliable');
+              return -1;
+            } else {
+              if (prev === -1) return screenshots.length - 1;
+              else return prev - 1;
+            }
+          })
+        }
+      >
+        <ChevronsLeft className="size-10 " />
+      </Button>
+      <div className="hidden dark:block absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827] pointer-events-none" />
 
       <div className="relative pt-60 px-6 pb-6 flex flex-col gap-5">
         <div className="flex items-start justify-between">
@@ -158,7 +218,32 @@ export default function GamePopOver({ game }: gamePopOverProps) {
           />
         </p>
         <div className="flex gap-3 pt-2 justify-center">
-          <Button className="rounded-xl">▶ Watch Trailer</Button>
+          {data?.data?.results?.length ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="rounded-xl cursor-pointer">
+                  ▶ Watch Trailer
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="max-w-5xl p-0 overflow-hidden border-none bg-black">
+                <video
+                  controls
+                  autoPlay
+                  className="w-full backdrop-blur-2xl aspect-video overflow-hidden"
+                  src={data.data.results[0].data.max}
+                  poster={game.background_image}
+                />
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button
+              className="rounded-xl cursor-pointer"
+              onClick={() => toast.error('No trailer available')}
+            >
+              ▶ Watch Trailer
+            </Button>
+          )}
         </div>
       </div>
     </div>
