@@ -1,13 +1,11 @@
 // import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   CalendarDays,
   Gamepad2,
   Heart,
   NotebookText,
   Star,
-  User,
   UserStar,
 } from 'lucide-react';
 import { Textarea } from './textarea';
@@ -22,138 +20,148 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import type { GameListItem } from '../Types/game';
+import { useQuery } from '@tanstack/react-query';
+type gamePopOverProps = {
+  game: GameListItem;
+};
 
-export default function GamePopOver() {
+export default function GamePopOver({ game }: gamePopOverProps) {
   const [rating, setRating] = useState<number | null>(null);
   const [note, setNote] = useState<string>('');
   const [status, setStatus] = useState<
     'playing' | 'completed' | 'dropped' | 'wishlist'
   >('playing');
   const selectedStatus =
-    'scale-120 drop-shadow-md drop-shadow-white/20 border border-white';
+    'scale-125 drop-shadow-md drop-shadow-white/20 border border-white';
   const [favourite, setFavourite] = useState<boolean>(false);
+  const { data, isError, error } = useQuery({
+    queryKey: ['game-trailer', game.id],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/this/trailer?id=${game.id}`,
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+    enabled: !!game?.id,
+  });
+  console.log(data);
+  console.log('hello');
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Share</Button>
-      </DialogTrigger>
+    <div className="relative min-h-160 w-full">
+      <img
+        src={game.background_image}
+        alt="Elden Ring"
+        className="absolute inset-0 w-full h-[45%] object-cover"
+      />
 
-      <DialogContent className="p-0 overflow-hidden border-none bg-[#111827] text-white max-w-3xl rounded-3xl">
-        <div className="relative min-h-160 w-full">
-          <img
-            src="https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/library_hero.jpg"
-            alt="Elden Ring"
-            className="absolute inset-0 w-full h-[45%] object-cover"
-          />
+      <div className="hidden dark:block absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827]" />
 
-          <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827]" />
+      <div className="relative pt-60 px-6 pb-6 flex flex-col gap-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="font-[Urbanist] font-bold text-3xl">{game.name}</h1>
+          </div>
 
-          <div className="relative pt-64 px-6 pb-6 flex flex-col gap-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <h1 className="font-[Urbanist] font-bold text-5xl">
-                  ELDEN RING
-                </h1>
-              </div>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full hover:bg-white/10 cursor-pointer"
+            onClick={() => setFavourite((prev) => !prev)}
+          >
+            {favourite ? (
+              <Heart className="size-5 fill-white" />
+            ) : (
+              <Heart className="size-5" />
+            )}
+          </Button>
+        </div>
 
-              <Button
-                size="icon"
-                variant="ghost"
-                className="rounded-full hover:bg-white/10 cursor-pointer"
-                onClick={() => setFavourite((prev) => !prev)}
-              >
-                {!favourite ? (
-                  <Heart className="size-5 fill-white" />
-                ) : (
-                  <Heart className="size-5" />
-                )}
-              </Button>
-            </div>
+        <div className="grid grid-cols-2 gap-4 text-sm font-[Urbanist]">
+          <div className="flex items-center gap-3 font-[Urbanist]">
+            <CalendarDays className="size-5 text-gray-300" />
+            <span>Released: {game.released}</span>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex items-center gap-3">
-                <User className="size-5 text-gray-300" />
-                <span>Singleplayer / Multiplayer</span>
-              </div>
+          <div className="flex items-center gap-3 font-[Urbanist]">
+            <Gamepad2 className="size-5 text-gray-300" />
 
-              <div className="flex items-center gap-3">
-                <CalendarDays className="size-5 text-gray-300" />
-                <span>Released: 2022</span>
-              </div>
+            <span>
+              {game.platforms.map((p) => p.platform.name).join(' • ')}
+            </span>
+          </div>
 
-              <div className="flex items-center gap-3">
-                <Gamepad2 className="size-5 text-gray-300" />
-                <span>PC • PS5 • Xbox Series X</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Star className="size-5 text-yellow-400" />
-                <span>4.7 Community Rating</span>
-              </div>
-            </div>
-            <div className="flex justify-around items-center">
-              <button
-                className={cn(
-                  'cursor-pointer bg-linear-to-r from bg-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
-                  status === 'playing' && selectedStatus,
-                )}
-                onClick={() => setStatus('playing')}
-              >
-                Playing
-              </button>
-              <button
-                className={cn(
-                  ' cursor-pointer bg-linear-to-r from bg-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
-                  status === 'completed' && selectedStatus,
-                )}
-                onClick={() => setStatus('completed')}
-              >
-                Completed
-              </button>
-              <button
-                className={cn(
-                  ' cursor-pointer bg-linear-to-r from bg-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
-                  status === 'dropped' && selectedStatus,
-                )}
-                onClick={() => setStatus('dropped')}
-              >
-                Dropped
-              </button>
-              <button
-                className={cn(
-                  ' cursor-pointer bg-linear-to-r from bg-yellow-300 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
-                  status === 'wishlist' && selectedStatus,
-                )}
-                onClick={() => setStatus('wishlist')}
-              >
-                Wishlist
-              </button>
-            </div>
-            <div className="flex items-center gap-3">
-              <UserStar className="size-5 text-gray-300" />
-              <RatingSection value={rating} setRating={setRating} />
-            </div>
-
-            <p className="flex items-center gap-3 text-sm leading-relaxed text-gray-200">
-              <NotebookText className="min-w-5 mt-0.5" />
-
-              <Textarea
-                className=""
-                placeholder="Zero deaths..."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </p>
-            <div className="flex gap-3 pt-2 justify-center">
-              <Button className="rounded-xl">▶ Watch Trailer</Button>
-
-              <Button variant="secondary" className="rounded-xl">
-                View Screenshots
-              </Button>
-            </div>
+          <div className="flex items-center gap-3">
+            <Star className="size-5 text-yellow-400" />
+            <span className="font-[Urbanist]">
+              {game.rating} Community Rating
+            </span>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        <div className="flex justify-around items-center">
+          <button
+            className={cn(
+              'cursor-pointer bg-linear-to-r from-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              status === 'playing' && selectedStatus,
+            )}
+            onClick={() => setStatus('playing')}
+          >
+            Playing
+          </button>
+          <button
+            className={cn(
+              ' cursor-pointer bg-linear-to-r from-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              status === 'completed' && selectedStatus,
+            )}
+            onClick={() => setStatus('completed')}
+          >
+            Completed
+          </button>
+          <button
+            className={cn(
+              ' cursor-pointer bg-linear-to-r from-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              status === 'dropped' && selectedStatus,
+            )}
+            onClick={() => setStatus('dropped')}
+          >
+            Dropped
+          </button>
+          <button
+            className={cn(
+              ' cursor-pointer bg-linear-to-r from-yellow-300 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              status === 'wishlist' && selectedStatus,
+            )}
+            onClick={() => setStatus('wishlist')}
+          >
+            Wishlist
+          </button>
+        </div>
+        <div className="flex items-center gap-3">
+          <UserStar className="size-5 text-gray-300" />
+          <RatingSection value={rating} setRating={setRating} />
+        </div>
+
+        <p className="flex items-center gap-3 text-sm leading-relaxed text-gray-200">
+          <NotebookText className="min-w-5 mt-0.5" />
+
+          <Textarea
+            className=""
+            placeholder="Zero deaths..."
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        </p>
+        <div className="flex gap-3 pt-2 justify-center">
+          <Button className="rounded-xl">▶ Watch Trailer</Button>
+        </div>
+      </div>
+    </div>
   );
 }
 function RatingSection({

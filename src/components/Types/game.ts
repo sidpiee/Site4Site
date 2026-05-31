@@ -16,7 +16,12 @@ export type GameListItem = {
     | "Multiplayer"
     | "Singleplayer / Multiplayer";
 
-  platforms: string[];
+platforms: {
+  platform: {
+    id: number;
+    name: string;
+  };
+}[];
 
   personalRating?: number;
 

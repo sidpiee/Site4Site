@@ -1,6 +1,7 @@
-import * as React from "react";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { ThemeProvider } from "@/components/Context/ThemeProvider";
+import * as React from 'react';
+import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { ThemeProvider } from '@/components/Context/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -11,6 +12,7 @@ function RootComponent() {
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Outlet />
+        <Toaster />
       </ThemeProvider>
     </>
   );
