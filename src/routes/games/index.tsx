@@ -7,7 +7,7 @@ import SearchResult from '@/components/ui/search-result';
 import { SearchBar } from '@/components/ui/searchbar';
 import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 
@@ -19,6 +19,7 @@ function RouteComponent() {
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 1000);
   const [selectedGame, setSelectedGame] = useState<number>(0);
+  const [games, setGames] = useState<GameListItem[]>([]);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['game', debouncedSearch],
     queryFn: async () => {
@@ -49,7 +50,9 @@ function RouteComponent() {
     },
     enabled: !!selectedGame,
   });
-
+  function addGames(g: GameListItem) {
+    setGames((prev) => [...prev, g]);
+  }
   return (
     <MainLayout>
       <div className="relative">
@@ -92,7 +95,11 @@ function RouteComponent() {
           }}
         >
           <DialogContent className="p-0 overflow-hidden max-w-4xl">
-            <GamePopOver game={particularGameQuery.data.data} />
+            <GamePopOver
+              game={particularGameQuery.data.data}
+              addGames={addGames}
+              setSelectedGame={setSelectedGame}
+            />
           </DialogContent>
         </Dialog>
       )}

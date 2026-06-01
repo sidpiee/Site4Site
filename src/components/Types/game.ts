@@ -11,10 +11,6 @@ export type GameListItem = {
     | "dropped"
     | "wishlist";
 
-  gameplayType:
-    | "Singleplayer"
-    | "Multiplayer"
-    | "Singleplayer / Multiplayer";
 
 platforms: {
   platform: {

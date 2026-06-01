@@ -28,18 +28,23 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 type gamePopOverProps = {
   game: GameListItem;
+  addGames: (g: GameListItem) => void;
+  setSelectedGame: (n: number) => void;
 };
-
-export default function GamePopOver({ game }: gamePopOverProps) {
+export default function GamePopOver({
+  game,
+  addGames,
+  setSelectedGame,
+}: gamePopOverProps) {
   const [rating, setRating] = useState<number | null>(null);
   const [note, setNote] = useState<string>('');
   const [status, setStatus] = useState<
     'playing' | 'completed' | 'dropped' | 'wishlist'
   >('playing');
-  const selectedStatus =
-    'scale-125 drop-shadow-md drop-shadow-white/20 border border-white';
   const [favourite, setFavourite] = useState<boolean>(false);
   const [screenshotIndex, setScreenshotIndex] = useState<number>(-1);
+  const selectedStatus =
+    'scale-125 drop-shadow-md drop-shadow-white/20 border border-white';
   const { data } = useQuery({
     queryKey: ['game-trailer', game.id],
     queryFn: async () => {
@@ -76,6 +81,18 @@ export default function GamePopOver({ game }: gamePopOverProps) {
     screenshotQuery.data?.data?.results?.map(
       (s: { id: number; image: string }) => s.image,
     ) || [];
+  function saveChanges() {
+    addGames({
+      ...game,
+      personalRating: rating ?? 0,
+      review: note || 'No notes added',
+      favorite: favourite,
+      status,
+    });
+
+    setSelectedGame(0);
+    toast.success('Game added successfully');
+  }
   return (
     <div className="relative min-h-160 w-full">
       <img
@@ -84,7 +101,7 @@ export default function GamePopOver({ game }: gamePopOverProps) {
             ? game.background_image
             : screenshots[screenshotIndex]
         }
-        alt="Elden Ring"
+        alt={game.name}
         className="absolute inset-0 w-full h-[45%] object-cover"
       />
       <Button
@@ -244,6 +261,13 @@ export default function GamePopOver({ game }: gamePopOverProps) {
               ▶ Watch Trailer
             </Button>
           )}
+          <Button
+            variant="secondary"
+            className="cursor-pointer"
+            onClick={saveChanges}
+          >
+            Save Changes
+          </Button>
         </div>
       </div>
     </div>
