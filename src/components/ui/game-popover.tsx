@@ -44,7 +44,7 @@ export default function GamePopOver({
   const [favourite, setFavourite] = useState<boolean>(false);
   const [screenshotIndex, setScreenshotIndex] = useState<number>(-1);
   const selectedStatus =
-    'scale-125 drop-shadow-md drop-shadow-white/20 border border-white';
+    'scale-125 drop-shadow-md dark:drop-shadow-white/20 border drop-shadow-black/20 border-black/60 dark:border-white';
   const { data } = useQuery({
     queryKey: ['game-trailer', game.id],
     queryFn: async () => {
@@ -94,7 +94,7 @@ export default function GamePopOver({
     toast.success('Game added successfully');
   }
   return (
-    <div className="relative min-h-160 w-full">
+    <div className="relative min-h-160 w-full ">
       <img
         src={
           screenshotIndex === -1
@@ -143,7 +143,9 @@ export default function GamePopOver({
       <div className="relative pt-60 px-6 pb-6 flex flex-col gap-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-[Urbanist] font-bold text-3xl">{game.name}</h1>
+            <h1 className="font-[Urbanist] font-bold text-3xl text-white ">
+              {game.name}
+            </h1>
           </div>
 
           <Button
@@ -155,19 +157,19 @@ export default function GamePopOver({
             {favourite ? (
               <Heart className="size-5 fill-white" />
             ) : (
-              <Heart className="size-5" />
+              <Heart className="size-5 fill-zinc-500/70" />
             )}
           </Button>
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sm font-[Urbanist]">
           <div className="flex items-center gap-3 font-[Urbanist]">
-            <CalendarDays className="size-5 text-gray-300" />
+            <CalendarDays className="size-5 dark:text-gray-300 text-black" />
             <span>Released: {game.released}</span>
           </div>
 
           <div className="flex items-center gap-3 font-[Urbanist]">
-            <Gamepad2 className="size-5 text-gray-300" />
+            <Gamepad2 className="size-5 dark:text-gray-300 text-black" />
 
             <span>
               {game.platforms.map((p) => p.platform.name).join(' • ')}
@@ -184,7 +186,7 @@ export default function GamePopOver({
         <div className="flex justify-around items-center">
           <button
             className={cn(
-              'cursor-pointer bg-linear-to-r from-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              'text-white cursor-pointer bg-linear-to-r from-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
               status === 'playing' && selectedStatus,
             )}
             onClick={() => setStatus('playing')}
@@ -193,7 +195,7 @@ export default function GamePopOver({
           </button>
           <button
             className={cn(
-              ' cursor-pointer bg-linear-to-r from-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              ' text-white cursor-pointer bg-linear-to-r from-emerald-400  to-emerald-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
               status === 'completed' && selectedStatus,
             )}
             onClick={() => setStatus('completed')}
@@ -202,7 +204,7 @@ export default function GamePopOver({
           </button>
           <button
             className={cn(
-              ' cursor-pointer bg-linear-to-r from-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              ' text-white cursor-pointer bg-linear-to-r from-red-400 to-red-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
               status === 'dropped' && selectedStatus,
             )}
             onClick={() => setStatus('dropped')}
@@ -211,7 +213,7 @@ export default function GamePopOver({
           </button>
           <button
             className={cn(
-              ' cursor-pointer bg-linear-to-r from-yellow-300 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
+              'text-white cursor-pointer bg-linear-to-r from-yellow-300 to-yellow-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',
               status === 'wishlist' && selectedStatus,
             )}
             onClick={() => setStatus('wishlist')}
@@ -228,7 +230,7 @@ export default function GamePopOver({
           <NotebookText className="min-w-5 mt-0.5" />
 
           <Textarea
-            className=""
+            className="bg-gray-200/80"
             placeholder="Zero deaths..."
             value={note}
             onChange={(e) => setNote(e.target.value)}

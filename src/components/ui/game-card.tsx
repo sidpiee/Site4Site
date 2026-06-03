@@ -19,7 +19,7 @@ export default function GameCard({
     <>
       <div
         className={cn(
-          'h-70 w-100 flex flex-col relative dark:bg-black/60 bg-slate-200/70  rounded-2xl overflow-hidden border-y-2  border-l-4 border-l-slate-500 dark:border-l-white',
+          'h-70 w-100 flex flex-col relative dark:bg-black/60 bg-slate-200/70  rounded-2xl overflow-hidden border-y-2  border-l-4 border-l-slate-400 dark:border-l-white',
           status === 'playing' && 'border-y-blue-500',
           status === 'completed' && 'border-y-emerald-500',
           status === 'dropped' && 'border-y-red-500',
