@@ -112,6 +112,7 @@ function RouteComponent() {
             rating={g.personalRating}
             img={g.background_image}
             status={g.status}
+            favourite={g.favorite}
           />
         ))}
       </div>

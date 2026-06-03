@@ -119,7 +119,7 @@ export default function GamePopOver({
           })
         }
       >
-        <ChevronsRight className="size-10" />
+        <ChevronsRight className="size-10 text-white" />
       </Button>
       <Button
         variant="ghost"
@@ -136,7 +136,7 @@ export default function GamePopOver({
           })
         }
       >
-        <ChevronsLeft className="size-10 " />
+        <ChevronsLeft className="size-10 text-white " />
       </Button>
       <div className="hidden dark:block absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827] pointer-events-none" />
 

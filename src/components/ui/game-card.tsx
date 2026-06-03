@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 
 type gameCardProps = {
   name: string;
@@ -7,6 +7,7 @@ type gameCardProps = {
   review?: string;
   img: string;
   status: 'playing' | 'completed' | 'dropped' | 'wishlist';
+  favourite?: boolean;
 };
 export default function GameCard({
   name,
@@ -14,6 +15,7 @@ export default function GameCard({
   review,
   img,
   status,
+  favourite,
 }: gameCardProps) {
   return (
     <>
@@ -39,6 +41,11 @@ export default function GameCard({
         >
           {status.toUpperCase()}
         </div>
+        {favourite && (
+          <div className="absolute right-3 top-10">
+            <Heart className="fill-white" />
+          </div>
+        )}
         <div className=" w-full  pt-2 px-3  z-10 text-white flex flex-col gap-1">
           <div className="flex justify-between">
             <h2 className="font-bold text-lg font-[Urbanist] text-black dark:text-white">
