@@ -96,7 +96,8 @@ export default function MoviePopOver({
           <div className="w-full px-2">
             <Textarea
               value={note}
-              placeholder="Might have to binge watch this one..."
+              placeholder="50 words to write your heart out!..."
+              maxLength={50}
               className=" border-black/20 border dark:border-white/20  bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50 mb-2"
               onChange={(e) => setNote(e.target.value)}
             />

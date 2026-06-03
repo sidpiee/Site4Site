@@ -231,11 +231,13 @@ export default function GamePopOver({
 
           <Textarea
             className="bg-gray-200/80"
-            placeholder="Zero deaths..."
+            placeholder="describe your love for this game in 50 words!..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
+            maxLength={50}
           />
         </p>
+
         <div className="flex gap-3 pt-2 justify-center">
           {data?.data?.results?.length ? (
             <Dialog>

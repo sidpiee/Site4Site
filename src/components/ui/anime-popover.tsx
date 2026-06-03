@@ -110,7 +110,8 @@ export default function AnimePopOver({
         <RatingSection value={rating} setRating={setRating} />
         <Textarea
           value={note}
-          placeholder="my comfort anime..."
+          placeholder="only got 50 words! make em count..."
+          maxLength={50}
           className="bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50"
           onChange={(e) => setNote(e.target.value)}
         />
