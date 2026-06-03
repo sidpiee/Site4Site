@@ -1,17 +1,57 @@
-export default function GameCard() {
+import { cn } from '@/lib/utils';
+import { Star } from 'lucide-react';
+
+type gameCardProps = {
+  name: string;
+  rating?: number;
+  review?: string;
+  img: string;
+  status: 'playing' | 'completed' | 'dropped' | 'wishlist';
+};
+export default function GameCard({
+  name,
+  rating,
+  review,
+  img,
+  status,
+}: gameCardProps) {
   return (
     <>
-      <div className="h-95 w-60 relative bg-card rounded-2xl overflow-hidden border-border border-2 ">
-        <img
-          src="https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/library_hero.jpg"
-          alt=""
-          className="absolute inset-0 object-cover h-full  "
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
-        <div className="absolute bottom-0 w-full p-4 z-10 text-white flex flex-col gap-1">
-          <h2 className="font-bold text-2xl font-[Urbanist]">Elden Ring</h2>
-          <p className="text-sm opacity-80">120 hrs played</p>
-          <p className="">Click for more details</p>
+      <div
+        className={cn(
+          'h-70 w-100 flex flex-col relative dark:bg-black/60 bg-slate-200/70  rounded-2xl overflow-hidden border-y-2  border-l-4 border-l-slate-500 dark:border-l-white',
+          status === 'playing' && 'border-y-blue-500',
+          status === 'completed' && 'border-y-emerald-500',
+          status === 'dropped' && 'border-y-red-500',
+          status === 'wishlist' && 'border-y-yellow-400',
+        )}
+      >
+        <img src={img} alt="" className=" inset-0 object-cover h-3/4 " />
+        {/* <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/40 to-transparent" /> */}
+        <div
+          className={cn(
+            'absolute top-2 right-2 px-2  text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold border-2 border-white/50',
+            status === 'playing' && 'bg-blue-500',
+            status === 'completed' && 'bg-emerald-500',
+            status === 'dropped' && 'bg-red-500',
+            status === 'wishlist' && 'bg-yellow-400',
+          )}
+        >
+          {status.toUpperCase()}
+        </div>
+        <div className=" w-full  pt-2 px-3  z-10 text-white flex flex-col gap-1">
+          <div className="flex justify-between">
+            <h2 className="font-bold text-lg font-[Urbanist] text-black dark:text-white">
+              {name}
+            </h2>
+            <p className="dark:text-yellow-400 text-amber-500 font-[Urbanist] flex items-center gap-1">
+              {rating}
+              <Star size={15} />
+            </p>
+          </div>
+          <h2 className="text-muted-foreground italic text-sm relative">
+            ~"{review}"
+          </h2>
         </div>
       </div>
     </>

@@ -1,12 +1,13 @@
-import { Check } from "lucide-react";
-import type { MovieListItem, OMDbMovie } from "../Types/movie";
-import IMDB from "@/assets/pics/imdb-logo.png";
-import no_image_found from "@/assets/pics/Image-Not-Found.jpg";
-import RottenTomatoes from "@/assets/pics/rotten_tomatoes.jpg";
-import Length from "@/assets/pics/length.webp";
-import { Button } from "./button";
-import { Textarea } from "./textarea";
-import { useState } from "react";
+import { Check } from 'lucide-react';
+import type { MovieListItem, OMDbMovie } from '../Types/movie';
+import IMDB from '@/assets/pics/imdb-logo.png';
+import no_image_found from '@/assets/pics/Image-Not-Found.jpg';
+import RottenTomatoes from '@/assets/pics/rotten_tomatoes.jpg';
+import Length from '@/assets/pics/length.webp';
+import { Button } from './button';
+import { Textarea } from './textarea';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 type MovieCardProps = {
   movie: OMDbMovie;
@@ -20,10 +21,10 @@ export default function MoviePopOver({
   addMovie,
 }: MovieCardProps) {
   const rottenTomatoes =
-    movie?.Ratings?.find((r) => r.Source === "Rotten Tomatoes")?.Value || "N/A";
-  const genres = movie.Genre.split(",").map((g) => g.trim());
-  const [note, setNote] = useState<string>("");
-  const [status, setStatus] = useState<"watched" | "plan">("watched");
+    movie?.Ratings?.find((r) => r.Source === 'Rotten Tomatoes')?.Value || 'N/A';
+  const genres = movie.Genre.split(',').map((g) => g.trim());
+  const [note, setNote] = useState<string>('');
+  const [status, setStatus] = useState<'watched' | 'plan'>('watched');
   function saveDetails() {
     const movieToAdd: MovieListItem = {
       ...movie,
@@ -31,7 +32,8 @@ export default function MoviePopOver({
       notes: note,
     };
     addMovie(movieToAdd);
-    setSelectedMovie("");
+    setSelectedMovie('');
+    toast.success('Movie added successfully!');
   }
   return (
     <>
@@ -80,15 +82,15 @@ export default function MoviePopOver({
           <div className="flex gap-2 px-4 justify-around w-full mt-3 pb-2">
             <Button
               className="m-0 cursor-pointer"
-              onClick={() => setStatus("watched")}
+              onClick={() => setStatus('watched')}
             >
-              Watched{status === "watched" && <Check />}
+              Watched{status === 'watched' && <Check />}
             </Button>
             <Button
               className="m-0 cursor-pointer"
-              onClick={() => setStatus("plan")}
+              onClick={() => setStatus('plan')}
             >
-              Plan to watch{status === "plan" && <Check />}
+              Plan to watch{status === 'plan' && <Check />}
             </Button>
           </div>
           <div className="w-full px-2">

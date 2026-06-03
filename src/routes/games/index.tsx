@@ -103,8 +103,17 @@ function RouteComponent() {
           </DialogContent>
         </Dialog>
       )}
-      <div className="grid grid-cols-4 mt-8">
-        <GameCard />
+      <div className="grid grid-cols-3 mt-8 gap-y-3 gap-x-5">
+        {games.map((g) => (
+          <GameCard
+            key={g.id}
+            name={g.name}
+            review={g.review}
+            rating={g.personalRating}
+            img={g.background_image}
+            status={g.status}
+          />
+        ))}
       </div>
     </MainLayout>
   );

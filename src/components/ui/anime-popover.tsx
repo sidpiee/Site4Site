@@ -13,6 +13,7 @@ import { ScrollArea } from './scroll-area';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { AnimeListItem } from '../Types/anime';
+import { toast } from 'sonner';
 type AnimePopOverProps = {
   selectedAnime: any;
   addAnime: (anime: AnimeListItem) => void;
@@ -45,6 +46,7 @@ export default function AnimePopOver({
     };
     addAnime(animeToAdd);
     setSelectedAnime(null);
+    toast.success('Anime added successfully');
   }
 
   return (
