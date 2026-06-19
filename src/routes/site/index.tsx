@@ -1,13 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
-import MainLayout from "@/components/Layout/MainLayout";
-import DisplayCard from "@/components/ui/display-card";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import SectionCard from "@/components/ui/section-card";
-import { useState, type ReactNode } from "react";
-import InputBox from "@/components/ui/input-box";
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import MainLayout from '@/components/Layout/MainLayout';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import SectionCard from '@/components/ui/section-card';
+import { useState } from 'react';
+import InputBox from '@/components/ui/input-box';
+import { supabase } from '@/lib/supabase';
 
-export const Route = createFileRoute("/site/")({
+export const Route = createFileRoute('/site/')({
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw redirect({ to: '/signIn' });
+    }
+  },
   component: RouteComponent,
 });
 
@@ -100,7 +109,7 @@ function RouteComponent() {
       })}
       {sections.length === 0 && (
         <p className="text-foreground mt-10 font-bold text-lg font-[Urbanist]">
-          {" "}
+          {' '}
           No sections added yet. Add one to get started.
         </p>
       )}

@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from '@tanstack/react-router';
 
-import { AuroraText } from "@/components/ui/aurora-text";
-import { RetroGrid } from "@/components/ui/retro-grid";
-import { TypingAnimation } from "@/components/ui/typing-animation";
-import { Button } from "@/components/ui/button";
+import { AuroraText } from '@/components/ui/aurora-text';
+import { RetroGrid } from '@/components/ui/retro-grid';
+import { TypingAnimation } from '@/components/ui/typing-animation';
+import { Button } from '@/components/ui/button';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
 });
 

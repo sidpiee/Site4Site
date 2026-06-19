@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from './button';
 
 type DisplayCardProps = {
   id: string;
@@ -11,7 +11,6 @@ export default function DisplayCard({
   name,
   url,
   note,
-  id,
   ondelete,
 }: DisplayCardProps) {
   return (
@@ -35,7 +34,7 @@ export default function DisplayCard({
       </div>
       <div className="flex flex-1 justify-end">
         <Button
-          variant={"destructive"}
+          variant={'destructive'}
           className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground"
           onClick={ondelete}
         >
