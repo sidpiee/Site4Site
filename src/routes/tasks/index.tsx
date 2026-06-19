@@ -1,14 +1,24 @@
-import { createFileRoute } from "@tanstack/react-router";
-import MainLayout from "@/components/Layout/MainLayout";
-import TaskCard from "../../components/ui/task-card";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import MainLayout from '@/components/Layout/MainLayout';
+import TaskCard from '../../components/ui/task-card';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/lib/supabase';
 
-export const Route = createFileRoute("/tasks/")({
+export const Route = createFileRoute('/tasks/')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw redirect({ to: '/signIn' });
+    }
+  },
 });
 type Task = {
   id: string;
@@ -52,7 +62,7 @@ function RouteComponent() {
         <Button
           className="p-4 text-md border-2 cursor-pointer mb-5"
           variant="outline"
-          size={"sm"}
+          size={'sm'}
           onClick={() => setOpenInput((prevOpenInput) => !prevOpenInput)}
         >
           Add Task <Plus />
@@ -73,7 +83,7 @@ function RouteComponent() {
       })}
       {tasks.length === 0 && (
         <p className="text-foreground mt-10 font-bold text-lg font-[Urbanist]">
-          {" "}
+          {' '}
           No tasks yet. Add one to get started.
         </p>
       )}
@@ -83,7 +93,7 @@ function RouteComponent() {
 
 function InputBox({ addTask }: InputBoxProps) {
   function HandleSubmit(formData: FormData) {
-    const task = formData.get("task") as string;
+    const task = formData.get('task') as string;
     if (!task?.trim()) return;
 
     addTask(task);

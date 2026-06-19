@@ -1,23 +1,33 @@
-import MainLayout from "@/components/Layout/MainLayout";
-import AnimeCard from "@/components/ui/anime-card";
-import { SearchBar } from "@/components/ui/searchbar";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import useDebounce from "@/hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
-import SearchResult from "@/components/ui/search-result";
-import Loding from "@/components/ui/loding-state";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import AnimePopOver from "@/components/ui/anime-popover";
-import type { AnimeListItem } from "@/components/Types/anime";
+import MainLayout from '@/components/Layout/MainLayout';
+import AnimeCard from '@/components/ui/anime-card';
+import { SearchBar } from '@/components/ui/searchbar';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { useState } from 'react';
+import useDebounce from '@/hooks/useDebounce';
+import { useQuery } from '@tanstack/react-query';
+import SearchResult from '@/components/ui/search-result';
+import Loding from '@/components/ui/loding-state';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import AnimePopOver from '@/components/ui/anime-popover';
+import type { AnimeListItem } from '@/components/Types/anime';
+import { supabase } from '@/lib/supabase';
 
-export const Route = createFileRoute("/anime/")({
+export const Route = createFileRoute('/anime/')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw redirect({ to: '/signIn' });
+    }
+  },
 });
 
 function RouteComponent() {
   const [animes, setAnimes] = useState<AnimeListItem[]>([]);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
   const debouncedSearch = useDebounce(search, 1200);
 
@@ -25,12 +35,12 @@ function RouteComponent() {
     setAnimes((prev) => [...prev, anime]);
   }
 
-  const planned = animes.filter((a) => a.status === "Plan to watch");
-  const watching = animes.filter((a) => a.status === "Watching");
-  const completed = animes.filter((a) => a.status === "Completed");
+  const planned = animes.filter((a) => a.status === 'Plan to watch');
+  const watching = animes.filter((a) => a.status === 'Watching');
+  const completed = animes.filter((a) => a.status === 'Completed');
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["anime", debouncedSearch],
+    queryKey: ['anime', debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/v1/anime?anime=${debouncedSearch}`,
@@ -87,7 +97,7 @@ function RouteComponent() {
                 imgSrc={anime.images.jpg.large_image_url}
                 title={anime.title_english || anime.title}
                 onClick={() => {
-                  setSearch("");
+                  setSearch('');
                   setSelectedAnime(anime);
                 }}
               />

@@ -8,11 +8,21 @@ import { SearchBar } from '@/components/ui/searchbar';
 import useDebounce from '@/hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 export const Route = createFileRoute('/games/')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw redirect({ to: '/signIn' });
+    }
+  },
 });
 
 function RouteComponent() {
