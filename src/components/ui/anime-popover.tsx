@@ -14,6 +14,8 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { AnimeListItem } from '../Types/anime';
 import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '../Context/AuthContext';
 type AnimePopOverProps = {
   selectedAnime: any;
   addAnime: (anime: AnimeListItem) => void;
@@ -24,12 +26,46 @@ export default function AnimePopOver({
   addAnime,
   setSelectedAnime,
 }: AnimePopOverProps) {
+  const { session } = useAuth();
   const [status, setStatus] = useState<
     'Plan to watch' | 'Watching' | 'Completed'
   >('Watching');
   const [note, setNote] = useState<string>('');
   const [epWatched, setEpWatched] = useState<number>(0);
   const [rating, setRating] = useState<number | null>(null);
+  const mutation = useMutation({
+    mutationFn: async (anime: AnimeListItem) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/anime/addAnime`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(anime),
+        },
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+
+    onSuccess: (_, anime) => {
+      addAnime(anime);
+      setSelectedAnime(null);
+      toast.success('Anime added successfully');
+    },
+
+    onError: () => {
+      toast.error('Anime already added');
+      setSelectedAnime(null);
+    },
+  });
 
   function saveDetails() {
     const animeToAdd: AnimeListItem = {
@@ -42,11 +78,9 @@ export default function AnimePopOver({
       status: status,
       rating: rating,
       episodesWatched: epWatched,
-      notes: note,
+      notes: note || 'No notes added',
     };
-    addAnime(animeToAdd);
-    setSelectedAnime(null);
-    toast.success('Anime added successfully');
+    mutation.mutate(animeToAdd);
   }
 
   return (

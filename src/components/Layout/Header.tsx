@@ -42,7 +42,7 @@ export default function Header() {
             <li>
               {user ? (
                 <Button
-                  className="cursor-pointer font-[Urbanist] font-semibold bg-red-500"
+                  className="cursor-pointer font-[Urbanist] font-semibold bg-red-500 hover:bg-red-700"
                   onClick={handleSignOut}
                   disabled={isLoading}
                 >
