@@ -1,27 +1,27 @@
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Progress } from "@/components/ui/progress";
-import type { AnimeListItem } from "../Types/anime";
-import { cn } from "@/lib/utils";
+import { Field, FieldLabel } from '@/components/ui/field';
+import { Progress } from '@/components/ui/progress';
+import type { SavedAnime } from '../Types/anime';
+import { cn } from '@/lib/utils';
 type AnimeCardProps = {
-  anime: AnimeListItem;
+  anime: SavedAnime;
 };
 export default function AnimeCard({ anime }: AnimeCardProps) {
-  const notes = anime.notes ?? "No notes added";
+  const notes = anime.notes ?? 'No notes added';
   return (
     <>
       <div className="w-75 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative ">
         <img
-          src={anime.images.jpg.large_image_url}
+          src={anime.image}
           alt={anime.title_english || anime.title}
           className="object-cover h-100"
         />
 
         <div
           className={cn(
-            "absolute top-2 right-2 px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold border-2 border-white/50",
-            anime.status === "Plan to watch" && "bg-violet-500",
-            anime.status === "Completed" && "bg-emerald-500",
-            anime.status === "Watching" && "bg-indigo-500",
+            'absolute top-2 right-2 px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold border-2 border-white/50',
+            anime.status === 'Plan to watch' && 'bg-violet-500',
+            anime.status === 'Completed' && 'bg-emerald-500',
+            anime.status === 'Watching' && 'bg-indigo-500',
           )}
         >
           {anime.status}
@@ -87,8 +87,8 @@ function Star({ rating }: { rating: number | null }) {
             key={star}
             className={`text-2xl  ${
               star <= safeRating
-                ? "text-yellow-400"
-                : "text-gray-300 dark:text-gray-600"
+                ? 'text-yellow-400'
+                : 'text-gray-300 dark:text-gray-600'
             }`}
           >
             ★

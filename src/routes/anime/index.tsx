@@ -9,7 +9,7 @@ import SearchResult from '@/components/ui/search-result';
 import Loding from '@/components/ui/loding-state';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import AnimePopOver from '@/components/ui/anime-popover';
-import type { AnimeListItem } from '@/components/Types/anime';
+import type { SavedAnime } from '@/components/Types/anime';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/Context/AuthContext';
 
@@ -28,18 +28,9 @@ export const Route = createFileRoute('/anime/')({
 
 function RouteComponent() {
   const { session } = useAuth();
-  const [animes, setAnimes] = useState<AnimeListItem[]>([]);
   const [search, setSearch] = useState<string>('');
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
   const debouncedSearch = useDebounce(search, 1200);
-
-  function addAnime(anime: AnimeListItem): void {
-    setAnimes((prev) => [...prev, anime]);
-  }
-
-  const planned = animes.filter((a) => a.status === 'Plan to watch');
-  const watching = animes.filter((a) => a.status === 'Watching');
-  const completed = animes.filter((a) => a.status === 'Completed');
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['anime', debouncedSearch],
@@ -56,7 +47,7 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
-  const userData = useQuery({
+  const { data: animes = [] } = useQuery({
     queryKey: ['user-anime'],
     queryFn: async () => {
       const res = await fetch(
@@ -72,11 +63,15 @@ function RouteComponent() {
         throw new Error(error.message);
       }
       const data = await res.json();
-      return data;
+      return data.data;
     },
     enabled: !!session,
   });
-
+  const planned = animes.filter(
+    (a: SavedAnime) => a.status === 'Plan to watch',
+  );
+  const watching = animes.filter((a: SavedAnime) => a.status === 'Watching');
+  const completed = animes.filter((a: SavedAnime) => a.status === 'Completed');
   return (
     <MainLayout>
       <div className="mb-10 relative">
@@ -139,7 +134,6 @@ function RouteComponent() {
             <AnimePopOver
               selectedAnime={selectedAnime}
               setSelectedAnime={setSelectedAnime}
-              addAnime={addAnime}
             />
           )}
         </DialogContent>
@@ -152,7 +146,7 @@ function RouteComponent() {
             </h1>
             <div className="h-1 w-110 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
             <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-              {planned.map((a) => {
+              {planned.map((a: SavedAnime) => {
                 return <AnimeCard key={a.mal_id} anime={a} />;
               })}
             </div>
@@ -167,7 +161,7 @@ function RouteComponent() {
             </h1>
             <div className="h-1 w-140 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
             <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-              {watching.map((a) => {
+              {watching.map((a: SavedAnime) => {
                 return <AnimeCard key={a.mal_id} anime={a} />;
               })}
             </div>
@@ -183,7 +177,7 @@ function RouteComponent() {
             </h1>
             <div className="h-1 w-180 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
             <div className="grid grid-cols-4 gap-x-2 gap-y-10">
-              {completed.map((a) => {
+              {completed.map((a: SavedAnime) => {
                 return <AnimeCard key={a.mal_id} anime={a} />;
               })}
             </div>

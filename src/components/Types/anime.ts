@@ -14,6 +14,18 @@ export type Anime = {
   }[];
 };
 
+export type SavedAnime = {
+  mal_id: number;
+  title: string;
+  title_english?: string;
+  image: string;
+  episodes: number;
+  genres: {
+    mal_id: number;
+    name: string;
+  }[];
+} & UserAnimeData;
+
 export type UserAnimeData = {
   status: "Watching" | "Plan to watch" | "Completed";
   rating: number | null;

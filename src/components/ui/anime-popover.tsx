@@ -14,18 +14,17 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { AnimeListItem } from '../Types/anime';
 import { toast } from 'sonner';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../Context/AuthContext';
 type AnimePopOverProps = {
   selectedAnime: any;
-  addAnime: (anime: AnimeListItem) => void;
   setSelectedAnime: (anime: any) => void;
 };
 export default function AnimePopOver({
   selectedAnime,
-  addAnime,
   setSelectedAnime,
 }: AnimePopOverProps) {
+  const queryClient = useQueryClient();
   const { session } = useAuth();
   const [status, setStatus] = useState<
     'Plan to watch' | 'Watching' | 'Completed'
@@ -55,8 +54,10 @@ export default function AnimePopOver({
       return res.json();
     },
 
-    onSuccess: (_, anime) => {
-      addAnime(anime);
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-anime'],
+      });
       setSelectedAnime(null);
       toast.success('Anime added successfully');
     },
