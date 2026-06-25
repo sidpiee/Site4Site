@@ -11,6 +11,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import AnimePopOver from '@/components/ui/anime-popover';
 import type { AnimeListItem } from '@/components/Types/anime';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/components/Context/AuthContext';
 
 export const Route = createFileRoute('/anime/')({
   component: RouteComponent,
@@ -26,6 +27,7 @@ export const Route = createFileRoute('/anime/')({
 });
 
 function RouteComponent() {
+  const { session } = useAuth();
   const [animes, setAnimes] = useState<AnimeListItem[]>([]);
   const [search, setSearch] = useState<string>('');
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
@@ -54,6 +56,27 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
+  const userData = useQuery({
+    queryKey: ['user-anime'],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/anime/getAnime`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      const data = await res.json();
+      return data;
+    },
+    enabled: !!session,
+  });
+
   return (
     <MainLayout>
       <div className="mb-10 relative">
