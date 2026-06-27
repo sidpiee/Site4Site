@@ -8,33 +8,66 @@ import { Button } from './button';
 import { Textarea } from './textarea';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../Context/AuthContext';
 
 type MovieCardProps = {
   movie: OMDbMovie;
   setSelectedMovie: (s: string) => void;
-  addMovie: (movie: MovieListItem) => void;
 };
 
 export default function MoviePopOver({
   movie,
   setSelectedMovie,
-  addMovie,
 }: MovieCardProps) {
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
   const rottenTomatoes =
     movie?.Ratings?.find((r) => r.Source === 'Rotten Tomatoes')?.Value || 'N/A';
   const genres = movie.Genre.split(',').map((g) => g.trim());
   const [note, setNote] = useState<string>('');
   const [status, setStatus] = useState<'watched' | 'plan'>('watched');
+  const mutation = useMutation({
+    mutationFn: async (movie: MovieListItem) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/addMovie`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(movie),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-movie'],
+      });
+      setSelectedMovie('');
+      toast.success('Movie added successfully');
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+      setSelectedMovie('');
+    },
+  });
   function saveDetails() {
     const movieToAdd: MovieListItem = {
       ...movie,
       status,
       notes: note,
     };
-    addMovie(movieToAdd);
-    setSelectedMovie('');
-    toast.success('Movie added successfully!');
+    mutation.mutate(movieToAdd);
   }
+
   return (
     <>
       <div className="bg-background h-140 w-full flex">

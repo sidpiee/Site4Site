@@ -4,13 +4,15 @@ import MainLayout from '@/components/Layout/MainLayout';
 import { SearchBar } from '@/components/ui/searchbar';
 import MovieCard from '@/components/ui/movie-card';
 import useDebounce from '@/hooks/useDebounce';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Loding from '@/components/ui/loding-state';
 import SearchResult from '@/components/ui/search-result';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import MoviePopOver from '@/components/ui/movie-popover';
 import type { MovieListItem } from '@/components/Types/movie';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/components/Context/AuthContext';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/movies/')({
   component: RouteComponent,
@@ -31,11 +33,51 @@ type BtnGroupProps = {
   setActive: (value: Filter) => void;
 };
 function RouteComponent() {
+  const queryClient = useQueryClient();
+  const { session } = useAuth();
   const [search, setSearch] = useState<string>('');
-  const [movies, setMovies] = useState<MovieListItem[]>([]);
   const [filter, setFilter] = useState<Filter>('all');
   const [selectedMovie, setSelectedMovie] = useState<string>('');
   const debouncedSearch = useDebounce(search, 800);
+  const changeStatusMutation = useMutation({
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: 'watched' | 'plan';
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/editMovie/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({ status }),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-movie'],
+      });
+      toast.success('Status updated');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
+  function changeStatus(id: string, status: 'watched' | 'plan') {
+    const newStatus = status === 'plan' ? 'watched' : 'plan';
+    changeStatusMutation.mutate({ id, status: newStatus });
+  }
   const { data, isLoading, isError } = useQuery({
     queryKey: ['movie', debouncedSearch],
     queryFn: async () => {
@@ -66,23 +108,31 @@ function RouteComponent() {
     },
     enabled: !!selectedMovie,
   });
-  function addMovie(movie: MovieListItem) {
-    setMovies((prev) => [...prev, movie]);
-  }
-  function changeStatus(id: string) {
-    setMovies((prev) =>
-      prev.map((m) =>
-        m.imdbID === id
-          ? {
-              ...m,
-              status: m.status === 'plan' ? 'watched' : 'plan',
-            }
-          : m,
-      ),
-    );
-  }
+  const { data: movies = [], isLoading: loding } = useQuery({
+    queryKey: ['user-movie'],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/getMovie`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!session,
+  });
+
   const filteredMovies =
-    filter === 'all' ? movies : movies.filter((m) => m.status === filter);
+    filter === 'all'
+      ? movies
+      : movies.filter((m: MovieListItem) => m.status === filter);
 
   return (
     <MainLayout>
@@ -130,17 +180,18 @@ function RouteComponent() {
             <MoviePopOver
               movie={particularMovieQuery.data.data}
               setSelectedMovie={setSelectedMovie}
-              addMovie={addMovie}
             />
           </DialogContent>
         </Dialog>
       )}
-      <div className="grid grid-cols-3  mt-6">
-        {filteredMovies.map((m) => (
-          <MovieCard movie={m} key={m.imdbID} changeStatus={changeStatus} />
-        ))}
-      </div>
-      {filteredMovies.length === 0 && (
+      {filteredMovies.length !== 0 && (
+        <div className="grid grid-cols-3  mt-6">
+          {filteredMovies.map((m) => (
+            <MovieCard movie={m} key={m.imdbID} changeStatus={changeStatus} />
+          ))}
+        </div>
+      )}
+      {filteredMovies.length === 0 && !loding && (
         <div className="mt-16 text-center flex flex-col items-center">
           <p className="text-foreground font-semibold text-3xl">
             No movies found 🍿

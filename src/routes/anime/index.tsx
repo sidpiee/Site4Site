@@ -47,7 +47,7 @@ function RouteComponent() {
     },
     enabled: debouncedSearch.trim().length > 0,
   });
-  const { data: animes = [] } = useQuery({
+  const { data: animes = [], isLoading: loding } = useQuery({
     queryKey: ['user-anime'],
     queryFn: async () => {
       const res = await fetch(
@@ -90,7 +90,7 @@ function RouteComponent() {
             {error.message}
           </p>
         )}
-        {animes.length === 0 && (
+        {animes.length === 0 && !loding && (
           <div className="w-full mt-30 flex flex-col items-center justify-center text-center absolute">
             <div className="text-6xl mb-4">🎬</div>
 
