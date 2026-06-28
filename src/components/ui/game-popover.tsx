@@ -23,19 +23,53 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { GameListItem } from '../Types/game';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { useAuth } from '../Context/AuthContext';
 type gamePopOverProps = {
   game: GameListItem;
-  addGames: (g: GameListItem) => void;
+
   setSelectedGame: (n: number) => void;
 };
 export default function GamePopOver({
   game,
-  addGames,
   setSelectedGame,
 }: gamePopOverProps) {
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async (game: GameListItem) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/addGame`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(game),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-game'],
+      });
+      setSelectedGame(0);
+      toast.success('Game added successfully');
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+      setSelectedGame(0);
+    },
+  });
   const [rating, setRating] = useState<number | null>(null);
   const [note, setNote] = useState<string>('');
   const [status, setStatus] = useState<
@@ -82,16 +116,19 @@ export default function GamePopOver({
       (s: { id: number; image: string }) => s.image,
     ) || [];
   function saveChanges() {
-    addGames({
-      ...game,
+    const addGame = {
+      id: game.id,
+      name: game.name,
+      rating: game.rating,
+      background_image: game.background_image,
+      released: game.released,
+      platforms: game.platforms,
       personalRating: rating ?? 0,
       review: note || 'No notes added',
       favorite: favourite,
       status,
-    });
-
-    setSelectedGame(0);
-    toast.success('Game added successfully');
+    };
+    mutation.mutate(addGame);
   }
   return (
     <div className="relative min-h-160 w-full ">

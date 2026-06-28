@@ -11,6 +11,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/components/Context/AuthContext';
 
 export const Route = createFileRoute('/games/')({
   component: RouteComponent,
@@ -27,9 +28,10 @@ export const Route = createFileRoute('/games/')({
 
 function RouteComponent() {
   const [search, setSearch] = useState<string>('');
+  const { session } = useAuth();
   const debouncedSearch = useDebounce(search, 1000);
   const [selectedGame, setSelectedGame] = useState<number>(0);
-  const [games, setGames] = useState<GameListItem[]>([]);
+  // const [games, setGames] = useState<GameListItem[]>([]);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['game', debouncedSearch],
     queryFn: async () => {
@@ -60,9 +62,26 @@ function RouteComponent() {
     },
     enabled: !!selectedGame,
   });
-  function addGames(g: GameListItem) {
-    setGames((prev) => [...prev, g]);
-  }
+  const { data: games = [], isLoading: gamesLoding } = useQuery({
+    queryKey: ['user-game'],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/getGame`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!session,
+  });
   return (
     <MainLayout>
       <div className="relative">
@@ -107,12 +126,18 @@ function RouteComponent() {
           <DialogContent className="p-0 overflow-hidden max-w-4xl">
             <GamePopOver
               game={particularGameQuery.data.data}
-              addGames={addGames}
               setSelectedGame={setSelectedGame}
             />
           </DialogContent>
         </Dialog>
       )}
+      {!gamesLoding && games.length === 0 && (
+        <div className="mt-16 text-center">
+          <p className="text-3xl font-semibold">No games found 🎮</p>
+          <p>Search and add your first game.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-3 mt-8 gap-y-3 gap-x-5">
         {games.map((g) => (
           <GameCard
