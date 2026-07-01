@@ -7,6 +7,9 @@ import { Plus } from 'lucide-react';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/lib/supabase';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/components/Context/AuthContext';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/tasks/')({
   component: RouteComponent,
@@ -26,36 +29,72 @@ type Task = {
   completed: boolean;
 };
 type InputBoxProps = {
-  addTask: (text: string) => void;
+  createTask: (t: Task) => void;
 };
 function RouteComponent() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { session } = useAuth();
+  const queryClient = useQueryClient();
+
+  // const [tasks, setTasks] = useState<Task[]>([]);
   const [openInput, setOpenInput] = useState<boolean>(false);
-
-  function addTask(text: string) {
-    setTasks((prevTasks) => {
-      return [
-        ...prevTasks,
+  const mutation = useMutation({
+    mutationFn: async (t: Task) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/task/addTask`,
         {
-          id: crypto.randomUUID(),
-          text: text,
-          completed: false,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(t),
         },
-      ];
-    });
-    setOpenInput(false);
-  }
-  function toggleTask(taskID: string) {
-    setTasks((prevTasks) => {
-      return prevTasks.map((t) =>
-        t.id === taskID ? { ...t, completed: !t.completed } : t,
       );
-    });
-  }
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-task'],
+      });
+      toast.success('Task added successfully');
+      setOpenInput(false);
+    },
 
-  function deleteTask(taskID: string) {
-    setTasks((prevTasks) => prevTasks.filter((t) => t.id !== taskID));
-  }
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+      setOpenInput(false);
+    },
+  });
+
+  const { data: tasks = [], isLoading: loading } = useQuery({
+    queryKey: ['user-task'],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/task/getTask`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!session,
+  });
+  function toggleTask(taskID: string) {}
+
+  function deleteTask(taskID: string) {}
   return (
     <MainLayout>
       <div className="relative">
@@ -67,8 +106,9 @@ function RouteComponent() {
         >
           Add Task <Plus />
         </Button>
-        {openInput && <InputBox addTask={addTask} />}
+        {openInput && <InputBox createTask={mutation.mutate} />}
       </div>
+
       {tasks.map((t) => {
         return (
           <TaskCard
@@ -81,7 +121,7 @@ function RouteComponent() {
           />
         );
       })}
-      {tasks.length === 0 && (
+      {tasks.length === 0 && !loading && (
         <p className="text-foreground mt-10 font-bold text-lg font-[Urbanist]">
           {' '}
           No tasks yet. Add one to get started.
@@ -91,12 +131,16 @@ function RouteComponent() {
   );
 }
 
-function InputBox({ addTask }: InputBoxProps) {
+function InputBox({ createTask }: InputBoxProps) {
   function HandleSubmit(formData: FormData) {
     const task = formData.get('task') as string;
     if (!task?.trim()) return;
-
-    addTask(task);
+    const TasktoAdd = {
+      id: crypto.randomUUID(),
+      text: task,
+      completed: false,
+    };
+    createTask(TasktoAdd);
   }
   return (
     <>
