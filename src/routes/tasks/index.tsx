@@ -35,7 +35,67 @@ function RouteComponent() {
   const { session } = useAuth();
   const queryClient = useQueryClient();
 
-  // const [tasks, setTasks] = useState<Task[]>([]);
+  const toggleTaskMutation = useMutation({
+    mutationFn: async ({
+      id,
+      completed,
+    }: {
+      id: string;
+      completed: boolean;
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/task/toggleTask/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({ completed }),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-task'],
+      });
+      toast.success('Status updated');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/task/deleteTask/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-task'],
+      });
+      toast.success('Task deleted');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
   const [openInput, setOpenInput] = useState<boolean>(false);
   const mutation = useMutation({
     mutationFn: async (t: Task) => {
@@ -92,9 +152,14 @@ function RouteComponent() {
     },
     enabled: !!session,
   });
-  function toggleTask(taskID: string) {}
+  function toggleTask({ id, completed }: { id: string; completed: boolean }) {
+    const newCompleted = !completed;
+    toggleTaskMutation.mutate({ id, completed: newCompleted });
+  }
 
-  function deleteTask(taskID: string) {}
+  function deleteTask(id: string) {
+    deleteMutation.mutate(id);
+  }
   return (
     <MainLayout>
       <div className="relative">

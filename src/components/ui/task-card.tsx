@@ -6,7 +6,7 @@ type TaskCardProps = {
   id: string;
   text: string;
   completed: boolean;
-  toggleTask: (taskID: string) => void;
+  toggleTask: ({ id, completed }: { id: string; completed: boolean }) => void;
   deleteTask: (taskID: string) => void;
 };
 
@@ -26,7 +26,7 @@ export default function TaskCard({
           'h-8 w-8 rounded-full flex items-center justify-center cursor-pointer',
           completed ? CompletedClass : InCompleteClass,
         )}
-        onClick={() => toggleTask(id)}
+        onClick={() => toggleTask({ id, completed })}
       >
         <Check />
       </button>
