@@ -6,14 +6,14 @@ import { useState } from 'react';
 import DisplayCard from './display-card';
 
 type Site = {
-  id: string;
+  _id: string;
   name: string;
   url: string;
   note: string;
 };
 
 type Section = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   sites: Site[];
@@ -21,14 +21,14 @@ type Section = {
 
 type SectionCardProps = {
   section: Section;
-  addsite: (sectionId: string, site: Omit<Site, 'id'>) => void;
+  addsite: (sectionId: string, site: Omit<Site, '_id'>) => void;
   removesection: (sectionId: string) => void;
   removesite: (sectionId: string, siteId: string) => void;
 };
 
 type InputBoxProps = {
   sectionId: string;
-  addSite: (sectionId: string, site: Omit<Site, 'id'>) => void;
+  addSite: (sectionId: string, site: Omit<Site, '_id'>) => void;
   close: () => void;
   opendropdown: () => void;
 };
@@ -55,7 +55,7 @@ export default function SectionCard({
         <div className="flex flex-1 justify-end items-center gap-4 relative">
           <Button
             className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
-            onClick={() => removesection(section.id)}
+            onClick={() => removesection(section._id)}
           >
             Delete
           </Button>
@@ -71,7 +71,7 @@ export default function SectionCard({
           {open && (
             <InputBox
               addSite={addsite}
-              sectionId={section.id}
+              sectionId={section._id}
               close={() => setOpen(false)}
               opendropdown={() => setDropdown(true)}
             />
@@ -89,12 +89,12 @@ export default function SectionCard({
         {dropdown &&
           section.sites.map((site) => (
             <DisplayCard
-              key={site.id}
-              id={site.id}
+              key={site._id}
+              id={site._id}
               name={site.name}
               url={site.url}
               note={site.note}
-              ondelete={() => removesite(section.id, site.id)}
+              ondelete={() => removesite(section._id, site._id)}
             />
           ))}
       </div>

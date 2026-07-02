@@ -24,14 +24,14 @@ export const Route = createFileRoute('/site/')({
 });
 
 type Site = {
-  id: string;
+  _id: string;
   name: string;
   url: string;
   note: string;
 };
 
 type Section = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   sites: Site[];
@@ -98,8 +98,81 @@ function RouteComponent() {
       toast.error('An error occurred');
     },
   });
+  const addSiteMutation = useMutation({
+    mutationFn: async ({
+      sectionId,
+      site,
+    }: {
+      sectionId: string;
+      site: {
+        name: string;
+        url: string;
+        note: string;
+      };
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section/site/${sectionId}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(site),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-section'],
+      });
+      toast.success('Site added');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
+  const deleteSiteMutation = useMutation({
+    mutationFn: async ({
+      sectionId,
+      siteId,
+    }: {
+      sectionId: string;
+      siteId: string;
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section/${sectionId}/site/${siteId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-section'],
+      });
+      toast.success('Site deleted');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
   const [inputOpen, setInputOpen] = useState<boolean>(false);
-  // const [sections, setSections] = useState<Section[]>([]);
+
   function addsection(title: string, description: string) {
     const newSection = {
       title,
@@ -110,12 +183,16 @@ function RouteComponent() {
   function addSite(
     sectionId: string,
     site: { name: string; url: string; note: string },
-  ) {}
+  ) {
+    addSiteMutation.mutate({ sectionId, site });
+  }
   function removesection(sectionId: string) {
     deleteSectionMutation.mutate(sectionId);
   }
-  function removeSite(sectionId: string, siteId: string) {}
-  const { data: sections = [] } = useQuery({
+  function removeSite(sectionId: string, siteId: string) {
+    deleteSiteMutation.mutate({ sectionId, siteId });
+  }
+  const { data: sections = [], isLoading } = useQuery({
     queryKey: ['user-section'],
     queryFn: async () => {
       const res = await fetch(
@@ -136,7 +213,7 @@ function RouteComponent() {
     },
     enabled: !!session,
   });
-  console.log(sections);
+
   return (
     <MainLayout>
       <div className="relative inline-block">
@@ -161,7 +238,7 @@ function RouteComponent() {
           />
         );
       })}
-      {sections.length === 0 && (
+      {sections.length === 0 && !isLoading && (
         <p className="text-foreground mt-10 font-bold text-lg font-[Urbanist]">
           {' '}
           No sections added yet. Add one to get started.
