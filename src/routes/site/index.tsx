@@ -6,6 +6,9 @@ import SectionCard from '@/components/ui/section-card';
 import { useState } from 'react';
 import InputBox from '@/components/ui/input-box';
 import { supabase } from '@/lib/supabase';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/components/Context/AuthContext';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/site/')({
   beforeLoad: async () => {
@@ -35,54 +38,105 @@ type Section = {
 };
 
 function RouteComponent() {
-  const [inputOpen, setInputOpen] = useState<boolean>(false);
-  const [sections, setSections] = useState<Section[]>([]);
-  function addsection(title: string, description: string) {
-    setSections((prevSections) => {
-      return [
-        ...prevSections,
+  const queryClient = useQueryClient();
+  const { session } = useAuth();
+  const addSectionMutation = useMutation({
+    mutationFn: async (section: { title: string; description: string }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section`,
         {
-          id: crypto.randomUUID(),
-          title,
-          description,
-          sites: [],
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(section),
         },
-      ];
-    });
-    setInputOpen(false);
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-section'],
+      });
+      setInputOpen(false);
+      toast.success('Section added successfully');
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+      setInputOpen(false);
+    },
+  });
+  const deleteSectionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-section'],
+      });
+      toast.success('Section deleted');
+    },
+    onError: () => {
+      toast.error('An error occurred');
+    },
+  });
+  const [inputOpen, setInputOpen] = useState<boolean>(false);
+  // const [sections, setSections] = useState<Section[]>([]);
+  function addsection(title: string, description: string) {
+    const newSection = {
+      title,
+      description,
+    };
+    addSectionMutation.mutate(newSection);
   }
   function addSite(
     sectionId: string,
     site: { name: string; url: string; note: string },
-  ) {
-    setSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              sites: [...section.sites, { id: crypto.randomUUID(), ...site }],
-            }
-          : section,
-      ),
-    );
-  }
+  ) {}
   function removesection(sectionId: string) {
-    setSections((prevSections) =>
-      prevSections.filter((s) => sectionId !== s.id),
-    );
+    deleteSectionMutation.mutate(sectionId);
   }
-  function removeSite(sectionId: string, siteId: string) {
-    setSections((prevSections) =>
-      prevSections.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              sites: section.sites.filter((site) => site.id !== siteId),
-            }
-          : section,
-      ),
-    );
-  }
+  function removeSite(sectionId: string, siteId: string) {}
+  const { data: sections = [] } = useQuery({
+    queryKey: ['user-section'],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!session,
+  });
+  console.log(sections);
   return (
     <MainLayout>
       <div className="relative inline-block">

@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { ChevronDown, Plus } from "lucide-react";
-import { Field, FieldGroup, FieldLabel } from "./field";
-import { Input } from "./input";
-import { useState } from "react";
-import DisplayCard from "./display-card";
+import { Button } from '@/components/ui/button';
+import { ChevronDown, Plus } from 'lucide-react';
+import { Field, FieldGroup, FieldLabel } from './field';
+import { Input } from './input';
+import { useState } from 'react';
+import DisplayCard from './display-card';
 
 type Site = {
   id: string;
@@ -21,14 +21,14 @@ type Section = {
 
 type SectionCardProps = {
   section: Section;
-  addsite: (sectionId: string, site: Omit<Site, "id">) => void;
+  addsite: (sectionId: string, site: Omit<Site, 'id'>) => void;
   removesection: (sectionId: string) => void;
   removesite: (sectionId: string, siteId: string) => void;
 };
 
 type InputBoxProps = {
   sectionId: string;
-  addSite: (sectionId: string, site: Omit<Site, "id">) => void;
+  addSite: (sectionId: string, site: Omit<Site, 'id'>) => void;
   close: () => void;
   opendropdown: () => void;
 };
@@ -54,8 +54,7 @@ export default function SectionCard({
 
         <div className="flex flex-1 justify-end items-center gap-4 relative">
           <Button
-            variant={"destructive"}
-            className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground"
+            className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
             onClick={() => removesection(section.id)}
           >
             Delete
@@ -105,9 +104,9 @@ export default function SectionCard({
 
 function InputBox({ addSite, sectionId, close, opendropdown }: InputBoxProps) {
   function takeinput(formData: FormData): void {
-    const url = formData.get("url") as string;
-    const name = formData.get("name") as string;
-    const note = formData.get("note") as string;
+    const url = formData.get('url') as string;
+    const name = formData.get('name') as string;
+    const note = formData.get('note') as string;
     addSite(sectionId, { name, url, note });
     close();
     opendropdown();

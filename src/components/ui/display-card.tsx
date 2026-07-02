@@ -35,7 +35,7 @@ export default function DisplayCard({
       <div className="flex flex-1 justify-end">
         <Button
           variant={'destructive'}
-          className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground"
+          className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground dark:bg-red-500 bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
           onClick={ondelete}
         >
           Delete
