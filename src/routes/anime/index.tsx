@@ -145,9 +145,17 @@ function RouteComponent() {
               Plan to Watch
             </h1>
             <div className="h-1 w-110 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
               {planned.map((a: SavedAnime) => {
-                return <AnimeCard key={a.mal_id} anime={a} />;
+                return (
+                  <AnimeCard
+                    key={a.mal_id}
+                    anime={a}
+                    onClick={() => {
+                      setSelectedAnime(a);
+                    }}
+                  />
+                );
               })}
             </div>
           </section>
@@ -160,9 +168,17 @@ function RouteComponent() {
               Watching
             </h1>
             <div className="h-1 w-140 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
               {watching.map((a: SavedAnime) => {
-                return <AnimeCard key={a.mal_id} anime={a} />;
+                return (
+                  <AnimeCard
+                    key={a.mal_id}
+                    anime={a}
+                    onClick={() => {
+                      setSelectedAnime(a);
+                    }}
+                  />
+                );
               })}
             </div>
           </section>
@@ -176,9 +192,17 @@ function RouteComponent() {
               Completed
             </h1>
             <div className="h-1 w-180 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-2 gap-y-10">
+            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
               {completed.map((a: SavedAnime) => {
-                return <AnimeCard key={a.mal_id} anime={a} />;
+                return (
+                  <AnimeCard
+                    key={a.mal_id}
+                    anime={a}
+                    onClick={() => {
+                      setSelectedAnime(a);
+                    }}
+                  />
+                );
               })}
             </div>
           </section>

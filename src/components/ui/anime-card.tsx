@@ -4,12 +4,16 @@ import type { SavedAnime } from '../Types/anime';
 import { cn } from '@/lib/utils';
 type AnimeCardProps = {
   anime: SavedAnime;
+  onClick: () => void;
 };
-export default function AnimeCard({ anime }: AnimeCardProps) {
+export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
   const notes = anime.notes ?? 'No notes added';
   return (
     <>
-      <div className="w-75 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative ">
+      <div
+        onClick={onClick}
+        className="w-75 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative hover:scale-105 transition-all ease-out cursor-pointer"
+      >
         <img
           src={anime.image}
           alt={anime.title_english || anime.title}
