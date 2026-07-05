@@ -113,6 +113,35 @@ export default function AnimePopOver({
       setSelectedAnime(null);
     },
   });
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/anime/deleteAnime/${selectedAnime.mal_id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-anime'],
+      });
+      setSelectedAnime(null);
+      toast.success('Anime delete successfully');
+    },
+
+    onError: () => {
+      toast.error('Cannot delete anime');
+      setSelectedAnime(null);
+    },
+  });
   function saveDetails() {
     if (isSavedAnime) return;
 
@@ -139,6 +168,9 @@ export default function AnimePopOver({
       notes: note,
     };
     updateMutation.mutate(anime);
+  }
+  function deleteAnime() {
+    deleteMutation.mutate();
   }
   return (
     <div className="h-120 w-full flex justify-start items-start">
@@ -210,12 +242,20 @@ export default function AnimePopOver({
           onChange={(e) => setNote(e.target.value)}
         />
         {isSavedAnime ? (
-          <Button
-            className="self-center cursor-pointer"
-            onClick={UpdateDetails}
-          >
-            Update Changes
-          </Button>
+          <div className="flex gap-15">
+            <Button
+              className="self-center cursor-pointer "
+              onClick={UpdateDetails}
+            >
+              Update Changes
+            </Button>
+            <Button
+              className="cursor-pointer bg-red-600 hover:bg-red-700"
+              onClick={deleteAnime}
+            >
+              Delete
+            </Button>
+          </div>
         ) : (
           <Button className="self-center cursor-pointer" onClick={saveDetails}>
             Save Changes
