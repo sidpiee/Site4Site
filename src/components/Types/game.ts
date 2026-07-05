@@ -23,5 +23,16 @@ platforms: {
 
   review?: string;
 
-  favorite?: boolean;
+  favourite?: boolean;
 };
+
+export type savedGame = {
+  personalRating?: number;
+  status:
+    | "playing"
+    | "completed"
+    | "dropped"
+    | "wishlist";
+  favourite?: boolean;
+  review?: string;
+}

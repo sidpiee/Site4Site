@@ -1,5 +1,5 @@
 import MainLayout from '@/components/Layout/MainLayout';
-import type { GameListItem } from '@/components/Types/game';
+import { type savedGame, type GameListItem } from '@/components/Types/game';
 import GameCard from '@/components/ui/game-card';
 import GamePopOver from '@/components/ui/game-popover';
 import Loding from '@/components/ui/loding-state';
@@ -31,6 +31,7 @@ function RouteComponent() {
   const { session } = useAuth();
   const debouncedSearch = useDebounce(search, 1000);
   const [selectedGame, setSelectedGame] = useState<number>(0);
+  const [dbGame, setDbGame] = useState<savedGame | null>(null);
   // const [games, setGames] = useState<GameListItem[]>([]);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['game', debouncedSearch],
@@ -110,6 +111,7 @@ function RouteComponent() {
                 onClick={() => {
                   setSearch('');
                   setSelectedGame(game.id);
+                  setDbGame(null);
                 }}
               />
             ))}
@@ -120,13 +122,18 @@ function RouteComponent() {
         <Dialog
           open={!!selectedGame}
           onOpenChange={(open) => {
-            if (!open) setSelectedGame(0);
+            if (!open) {
+              setSelectedGame(0);
+              setDbGame(null);
+            }
           }}
         >
           <DialogContent className="p-0 overflow-hidden max-w-4xl">
             <GamePopOver
               game={particularGameQuery.data.data}
               setSelectedGame={setSelectedGame}
+              dbGame={dbGame}
+              setDbGame={setDbGame}
             />
           </DialogContent>
         </Dialog>
@@ -139,7 +146,7 @@ function RouteComponent() {
       )}
 
       <div className="grid grid-cols-3 mt-8 gap-y-3 gap-x-5">
-        {games.map((g) => (
+        {games.map((g: GameListItem) => (
           <GameCard
             key={g.id}
             name={g.name}
@@ -147,7 +154,16 @@ function RouteComponent() {
             rating={g.personalRating}
             img={g.background_image}
             status={g.status}
-            favourite={g.favorite}
+            favourite={g.favourite}
+            onClick={() => {
+              setSelectedGame(g.id);
+              setDbGame({
+                personalRating: g.personalRating,
+                status: g.status,
+                favourite: g.favourite,
+                review: g.review,
+              });
+            }}
           />
         ))}
       </div>

@@ -54,8 +54,8 @@ export default function MoviePopOver({
       toast.success('Movie added successfully');
     },
 
-    onError: (error) => {
-      toast.error(error.message);
+    onError: () => {
+      toast.error('Movie already exists');
       setSelectedMovie('');
     },
   });

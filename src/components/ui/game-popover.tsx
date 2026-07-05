@@ -22,17 +22,20 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import type { GameListItem } from '../Types/game';
+import type { GameListItem, savedGame } from '../Types/game';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useAuth } from '../Context/AuthContext';
 type gamePopOverProps = {
   game: GameListItem;
-
   setSelectedGame: (n: number) => void;
+  dbGame: savedGame | null;
+  setDbGame: (game: savedGame | null) => void;
 };
 export default function GamePopOver({
+  dbGame,
+  setDbGame,
   game,
   setSelectedGame,
 }: gamePopOverProps) {
@@ -62,20 +65,99 @@ export default function GamePopOver({
         queryKey: ['user-game'],
       });
       setSelectedGame(0);
+      setDbGame(null);
       toast.success('Game added successfully');
     },
 
     onError: (error) => {
       toast.error(error.message);
       setSelectedGame(0);
+      setDbGame(null);
     },
   });
-  const [rating, setRating] = useState<number | null>(null);
-  const [note, setNote] = useState<string>('');
+  const updateGameMutation = useMutation({
+    mutationFn: async (updatedGame: {
+      id: number;
+      status: 'playing' | 'completed' | 'dropped' | 'wishlist';
+      note: string;
+      favourite: boolean;
+      personalRating: number | null;
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/updateGame/${updatedGame.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(updatedGame),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-game'],
+      });
+      setSelectedGame(0);
+      setDbGame(null);
+      toast.success('Game updated successfully');
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+      setSelectedGame(0);
+      setDbGame(null);
+    },
+  });
+  const deleteGameMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/game/deleteGame/${game.id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-game'],
+      });
+      setSelectedGame(0);
+      setDbGame(null);
+      toast.success('Game deleted successfully');
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+      setSelectedGame(0);
+      setDbGame(null);
+    },
+  });
+  const initialRating = dbGame?.personalRating ?? null;
+  const initialStatus = dbGame ? dbGame.status : 'playing';
+  const initialFavourite = dbGame?.favourite ?? false;
+  const initialNote = dbGame?.review ?? '';
+
+  const [rating, setRating] = useState<number | null>(initialRating);
+  const [note, setNote] = useState<string>(initialNote);
   const [status, setStatus] = useState<
     'playing' | 'completed' | 'dropped' | 'wishlist'
-  >('playing');
-  const [favourite, setFavourite] = useState<boolean>(false);
+  >(initialStatus);
+  const [favourite, setFavourite] = useState<boolean>(initialFavourite);
   const [screenshotIndex, setScreenshotIndex] = useState<number>(-1);
   const selectedStatus =
     'scale-125 drop-shadow-md dark:drop-shadow-white/20 border drop-shadow-black/20 border-black/60 dark:border-white';
@@ -125,10 +207,23 @@ export default function GamePopOver({
       platforms: game.platforms,
       personalRating: rating ?? 0,
       review: note || 'No notes added',
-      favorite: favourite,
+      favourite: favourite,
       status,
     };
     mutation.mutate(addGame);
+  }
+  function updateChanges() {
+    const updateGame = {
+      id: game.id,
+      personalRating: rating,
+      favourite,
+      status,
+      note,
+    };
+    updateGameMutation.mutate(updateGame);
+  }
+  function deleteGame() {
+    deleteGameMutation.mutate();
   }
   return (
     <div className="relative min-h-160 w-full ">
@@ -302,13 +397,31 @@ export default function GamePopOver({
               ▶ Watch Trailer
             </Button>
           )}
-          <Button
-            variant="secondary"
-            className="cursor-pointer"
-            onClick={saveChanges}
-          >
-            Save Changes
-          </Button>
+          {dbGame ? (
+            <Button
+              variant="secondary"
+              className="cursor-pointer"
+              onClick={updateChanges}
+            >
+              Update Changes
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              className="cursor-pointer"
+              onClick={saveChanges}
+            >
+              Save Changes
+            </Button>
+          )}
+          {dbGame && (
+            <Button
+              className="cursor-pointer bg-red-600 hover:bg-red-700"
+              onClick={deleteGame}
+            >
+              Delete
+            </Button>
+          )}
         </div>
       </div>
     </div>
