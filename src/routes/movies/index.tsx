@@ -9,7 +9,7 @@ import Loding from '@/components/ui/loding-state';
 import SearchResult from '@/components/ui/search-result';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import MoviePopOver from '@/components/ui/movie-popover';
-import type { MovieListItem } from '@/components/Types/movie';
+import { type DbMovie, type MovieListItem } from '@/components/Types/movie';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/Context/AuthContext';
 import { toast } from 'sonner';
@@ -37,6 +37,7 @@ function RouteComponent() {
   const { session } = useAuth();
   const [search, setSearch] = useState<string>('');
   const [filter, setFilter] = useState<Filter>('all');
+  const [savedMovie, setSavedMovie] = useState<DbMovie | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<string>('');
   const debouncedSearch = useDebounce(search, 800);
   const changeStatusMutation = useMutation({
@@ -173,21 +174,34 @@ function RouteComponent() {
         <Dialog
           open={!!selectedMovie}
           onOpenChange={(open) => {
-            if (!open) setSelectedMovie('');
+            if (!open) {
+              setSelectedMovie('');
+              setSavedMovie(null);
+            }
           }}
         >
           <DialogContent className="p-0 overflow-hidden max-w-4xl">
             <MoviePopOver
               movie={particularMovieQuery.data.data}
               setSelectedMovie={setSelectedMovie}
+              savedMovie={savedMovie}
+              setSavedMovie={setSavedMovie}
             />
           </DialogContent>
         </Dialog>
       )}
       {filteredMovies.length !== 0 && (
         <div className="grid grid-cols-3  mt-6">
-          {filteredMovies.map((m) => (
-            <MovieCard movie={m} key={m.imdbID} changeStatus={changeStatus} />
+          {filteredMovies.map((m: MovieListItem) => (
+            <MovieCard
+              movie={m}
+              key={m.imdbID}
+              changeStatus={changeStatus}
+              onClick={() => {
+                setSelectedMovie(m.imdbID);
+                setSavedMovie({ notes: m.notes, status: m.status });
+              }}
+            />
           ))}
         </div>
       )}

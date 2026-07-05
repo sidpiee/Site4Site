@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react';
-import type { MovieListItem, OMDbMovie } from '../Types/movie';
+import type { DbMovie, MovieListItem, OMDbMovie } from '../Types/movie';
 import IMDB from '@/assets/pics/imdb-logo.png';
 import no_image_found from '@/assets/pics/Image-Not-Found.jpg';
 import RottenTomatoes from '@/assets/pics/rotten_tomatoes.jpg';
@@ -14,19 +14,25 @@ import { useAuth } from '../Context/AuthContext';
 type MovieCardProps = {
   movie: OMDbMovie;
   setSelectedMovie: (s: string) => void;
+  savedMovie: DbMovie | null;
+  setSavedMovie: (movie: DbMovie | null) => void;
 };
 
 export default function MoviePopOver({
+  savedMovie,
+  setSavedMovie,
   movie,
   setSelectedMovie,
 }: MovieCardProps) {
   const { session } = useAuth();
   const queryClient = useQueryClient();
+  const initialNotes = savedMovie?.notes ?? '';
+  const initialStatus = savedMovie?.status ?? 'watched';
   const rottenTomatoes =
     movie?.Ratings?.find((r) => r.Source === 'Rotten Tomatoes')?.Value || 'N/A';
   const genres = movie.Genre.split(',').map((g) => g.trim());
-  const [note, setNote] = useState<string>('');
-  const [status, setStatus] = useState<'watched' | 'plan'>('watched');
+  const [note, setNote] = useState<string>(initialNotes);
+  const [status, setStatus] = useState<'watched' | 'plan'>(initialStatus);
   const mutation = useMutation({
     mutationFn: async (movie: MovieListItem) => {
       const res = await fetch(
@@ -51,12 +57,83 @@ export default function MoviePopOver({
         queryKey: ['user-movie'],
       });
       setSelectedMovie('');
+      setSavedMovie(null);
       toast.success('Movie added successfully');
     },
 
     onError: () => {
       toast.error('Movie already exists');
       setSelectedMovie('');
+      setSavedMovie(null);
+    },
+  });
+  const updateMutation = useMutation({
+    mutationFn: async (updatedMovie: {
+      status: 'watched' | 'plan';
+      notes: string;
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/updateMovie/${movie.imdbID}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(updatedMovie),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-movie'],
+      });
+      setSelectedMovie('');
+      setSavedMovie(null);
+      toast.success('Movie updated successfully');
+    },
+
+    onError: () => {
+      toast.error('Movie not updated');
+      setSelectedMovie('');
+      setSavedMovie(null);
+    },
+  });
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/movie/deleteMovie/${movie.imdbID}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-movie'],
+      });
+      setSelectedMovie('');
+      setSavedMovie(null);
+      toast.success('Movie deleted successfully');
+    },
+
+    onError: () => {
+      toast.error('Movie not deleted');
+      setSelectedMovie('');
+      setSavedMovie(null);
     },
   });
   function saveDetails() {
@@ -67,7 +144,16 @@ export default function MoviePopOver({
     };
     mutation.mutate(movieToAdd);
   }
-
+  function updateDetails() {
+    const updateMovie = {
+      notes: note,
+      status,
+    };
+    updateMutation.mutate(updateMovie);
+  }
+  function deleteMovie() {
+    deleteMutation.mutate();
+  }
   return (
     <>
       <div className="bg-background h-140 w-full flex">
@@ -136,12 +222,29 @@ export default function MoviePopOver({
             />
           </div>
           <div className="flex justify-center w-full">
-            <Button
-              className=" cursor-pointer dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2 hover:dark:bg-indigo-950 hover:scale-110"
-              onClick={saveDetails}
-            >
-              Save Changes
-            </Button>
+            {savedMovie ? (
+              <div className="flex gap-15">
+                <Button
+                  className=" cursor-pointer dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2 hover:dark:bg-indigo-950 hover:scale-110"
+                  onClick={updateDetails}
+                >
+                  Update Changes
+                </Button>
+                <Button
+                  className="cursor-pointer bg-red-600 hover:bg-red-700"
+                  onClick={deleteMovie}
+                >
+                  Delete
+                </Button>
+              </div>
+            ) : (
+              <Button
+                className=" cursor-pointer dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2 hover:dark:bg-indigo-950 hover:scale-110"
+                onClick={saveDetails}
+              >
+                Save Changes
+              </Button>
+            )}
           </div>
         </div>
       </div>

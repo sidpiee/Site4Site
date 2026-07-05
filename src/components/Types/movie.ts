@@ -17,3 +17,8 @@ export type UserMovieData = {
   notes: string;
 };
 export type MovieListItem = OMDbMovie & UserMovieData;
+
+export type DbMovie = {
+  notes : string ,
+  status : "watched" | "plan";
+}

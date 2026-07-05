@@ -7,14 +7,19 @@ import noImage from '@/assets/pics/No_image_Moviecard.png';
 export default function MovieCard({
   movie,
   changeStatus,
+  onClick,
 }: {
   movie: MovieListItem;
   changeStatus: (id: string, status: 'watched' | 'plan') => void;
+  onClick: () => void;
 }) {
   const watched = movie.status === 'watched';
   return (
     <>
-      <div className="flex flex-col dark:bg-card h-fit w-75 drop-shadow-xl backdrop-blur-md rounded-xl m-10 pb-3 text-card-foreground gap-2 bg-white">
+      <div
+        onClick={onClick}
+        className=" hover:scale-105 transition-all ease-out cursor-pointer flex flex-col dark:bg-card h-fit w-75 drop-shadow-xl backdrop-blur-md rounded-xl m-10 pb-3 text-card-foreground gap-2 bg-white"
+      >
         <img
           src={movie.Poster}
           alt={movie.Title}
@@ -34,7 +39,10 @@ export default function MovieCard({
             size={'icon-sm'}
             variant={'secondary'}
             className="cursor-pointer"
-            onClick={() => changeStatus(movie.imdbID, movie.status)}
+            onClick={(e) => {
+              e.stopPropagation();
+              changeStatus(movie.imdbID, movie.status);
+            }}
           >
             {watched ? <Check /> : <Plus />}
           </Button>
