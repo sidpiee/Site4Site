@@ -33,7 +33,7 @@ export default function Header() {
       </div>
       <div className="flex  items-center justify-end px-6">
         <nav>
-          <ul className="flex items-center gap-15">
+          <ul className="flex items-center gap-6 justify-end">
             <li>Docs</li>
             <li>About</li>
             <li>
