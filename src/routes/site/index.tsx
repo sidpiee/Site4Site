@@ -192,7 +192,7 @@ function RouteComponent() {
   function removeSite(sectionId: string, siteId: string) {
     deleteSiteMutation.mutate({ sectionId, siteId });
   }
-  const { data: sections = [], isLoading } = useQuery({
+  const { data: sections = [], isLoading } = useQuery<Section[]>({
     queryKey: ['user-section'],
     queryFn: async () => {
       const res = await fetch(
@@ -230,7 +230,7 @@ function RouteComponent() {
       {sections.map((s) => {
         return (
           <SectionCard
-            key={s.id}
+            key={s._id}
             section={s}
             addsite={addSite}
             removesection={removesection}

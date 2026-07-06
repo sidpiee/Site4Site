@@ -14,25 +14,30 @@ export default function DisplayCard({
   ondelete,
 }: DisplayCardProps) {
   return (
-    <div className="bg-card h-22 w-full px-6 rounded-l-lg mt-3 flex items-center justify-start gap-7 border-border border-4">
-      <div className="bg-background/80 rounded-md p-2">
+    <div className="bg-card min-h-22 w-full px-6 py-4 rounded-l-lg mt-3 flex flex-col items-start justify-start gap-4 border-border border-4 sm:flex-row sm:items-center">
+      <div className="shrink-0 bg-background/80 rounded-md p-2">
         <img
           src={`https://www.google.com/s2/favicons?domain=${url}&sz=32`}
           alt="logo"
-          className=" h-8 w-8"
+          className="h-8 w-8"
         />
       </div>
-      <div className="flex flex-col">
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          <h1 className="font-[Urbanist] font-semibold text-card-foreground text-3xl tracking-wide">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0 max-w-full"
+        >
+          <h1 className="font-[Urbanist] font-semibold text-card-foreground text-3xl leading-tight tracking-wide break-words [overflow-wrap:anywhere]">
             {name}
           </h1>
         </a>
-        <h1 className="font-[Fredoka] font-medium text-muted-foreground">
+        <p className="font-[Fredoka] font-medium text-muted-foreground break-words [overflow-wrap:anywhere]">
           {note}
-        </h1>
+        </p>
       </div>
-      <div className="flex flex-1 justify-end">
+      <div className="flex w-full shrink-0 justify-end sm:w-auto">
         <Button
           variant={'destructive'}
           className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground dark:bg-red-500 bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"

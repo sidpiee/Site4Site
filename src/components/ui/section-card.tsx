@@ -40,19 +40,20 @@ export default function SectionCard({
 }: SectionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
   return (
     <div className="flex flex-col bg-muted/70 dark:bg-muted/20 px-6 py-4 rounded-md mt-4">
-      <div className="flex  items-center ">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-[Urbanist]  font-bold text-3xl text-card-foreground">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <h1 className="font-[Urbanist] font-bold text-3xl leading-tight text-card-foreground wrap-break-words [overflow-wrap:anywhere]">
             {section.title}
           </h1>
-          <p className="font-[Space_Grotesk] text-sm text-muted-foreground">
+          <p className="font-[Space_Grotesk] text-sm text-muted-foreground wrap-break-words [overflow-wrap:anywhere]">
             {section.description}
           </p>
         </div>
 
-        <div className="flex flex-1 justify-end items-center gap-4 relative">
+        <div className="relative flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
           <Button
             className="dark:border-white/40 border-black/40  border cursor-pointer  text-destructive-foreground bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
             onClick={() => removesection(section._id)}
