@@ -131,7 +131,7 @@ function RouteComponent() {
     },
   });
 
-  const { data: tasks = [], isLoading: loading } = useQuery({
+  const { data: tasks = [], isLoading: loading } = useQuery<Task[]>({
     queryKey: ['user-task'],
     queryFn: async () => {
       const res = await fetch(
@@ -200,9 +200,10 @@ function InputBox({ createTask }: InputBoxProps) {
   function HandleSubmit(formData: FormData) {
     const task = formData.get('task') as string;
     if (!task?.trim()) return;
+    const newTask = task.replace(/\s+/g, ' ').trim();
     const TasktoAdd = {
       id: crypto.randomUUID(),
-      text: task,
+      text: newTask,
       completed: false,
     };
     createTask(TasktoAdd);
