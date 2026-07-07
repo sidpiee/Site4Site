@@ -48,6 +48,41 @@ export default function SectionCard({
   const [isEditing, setIsEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(section.title);
   const [draftDes, setDraftDes] = useState(section.description);
+
+  const updateSiteMutation = useMutation({
+    mutationFn: async (updatedSite: {
+      name: string;
+      url: string;
+      note: string;
+      _id: string;
+    }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/section/${section._id}/site/${updatedSite._id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(updatedSite),
+        },
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['user-section'],
+      });
+      toast.success('Site updated');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
   const updateMutation = useMutation({
     mutationFn: async (updatedSection: {
       title: string;
@@ -70,20 +105,16 @@ export default function SectionCard({
       }
       return res.json();
     },
-    onSuccess: (_data, updatedSection) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['user-section'],
       });
       toast.success('Section updated');
       setIsEditing(false);
-      setDraftTitle(updatedSection.title);
-      setDraftDes(updatedSection.description);
     },
     onError: (error) => {
       toast.error(error.message);
       setIsEditing(false);
-      setDraftTitle(section.title);
-      setDraftDes(section.description);
     },
   });
   function updateSection() {
@@ -113,6 +144,7 @@ export default function SectionCard({
                 onChange={(e) => setDraftTitle(e.target.value)}
                 autoFocus
                 className="mx-10"
+                placeholder="Title"
               />
             </div>
             <div className="flex items-center">
@@ -121,6 +153,7 @@ export default function SectionCard({
                 value={draftDes}
                 onChange={(e) => setDraftDes(e.target.value)}
                 className="mx-10"
+                placeholder="description"
               />
             </div>
           </div>
@@ -155,7 +188,11 @@ export default function SectionCard({
           <div className="relative flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
             <Button
               className="cursor-pointer"
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setDraftTitle(section.title);
+                setDraftDes(section.description);
+                setIsEditing(true);
+              }}
             >
               Edit
             </Button>
@@ -202,6 +239,9 @@ export default function SectionCard({
               url={site.url}
               note={site.note}
               ondelete={() => removesite(section._id, site._id)}
+              updateSite={(updatedSite) =>
+                updateSiteMutation.mutate(updatedSite)
+              }
             />
           ))}
       </div>
