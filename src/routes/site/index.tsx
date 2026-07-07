@@ -174,9 +174,15 @@ function RouteComponent() {
   const [inputOpen, setInputOpen] = useState<boolean>(false);
 
   function addsection(title: string, description: string) {
+    const newTitle = title.replace(/\s+/g, ' ').trim();
+    const newDes = description.replace(/\s+/g, ' ').trim();
+    if (!newTitle) {
+      toast.error('Title cannot be empty');
+      return;
+    }
     const newSection = {
-      title,
-      description,
+      title: newTitle,
+      description: newDes,
     };
     addSectionMutation.mutate(newSection);
   }
@@ -184,7 +190,19 @@ function RouteComponent() {
     sectionId: string,
     site: { name: string; url: string; note: string },
   ) {
-    addSiteMutation.mutate({ sectionId, site });
+    const updatedName = site.name.replace(/\s+/g, ' ').trim();
+    const updatedUrl = site.url.replace(/\s+/g, ' ').trim();
+    const updatedNote = site.note.replace(/\s+/g, ' ').trim();
+    if (!updatedName || !updatedUrl) {
+      toast.error('Name or url cannot be empty');
+      return;
+    }
+    const updatedSite = {
+      name: updatedName,
+      url: updatedUrl,
+      note: updatedNote,
+    };
+    addSiteMutation.mutate({ sectionId, site: updatedSite });
   }
   function removesection(sectionId: string) {
     deleteSectionMutation.mutate(sectionId);
