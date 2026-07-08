@@ -22,17 +22,16 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 w-full z-50 pt-2 h-15 bg-background backdrop-blur border-b-2  ">
-      <div className="absolute left-1/2 -translate-x-1/2">
-        <h1 className="text-5xl font-extrabold italic tracking-tight font-[Zalando_Sans_Expanded]">
-          <Link to="/">
-            <span className="text-indigo-500">SITE</span>
-            <span className="">4</span>
-            <span className="text-indigo-500">SITE</span>
-          </Link>
-        </h1>
-      </div>
-      <div className="flex  items-center justify-end px-6">
-        <nav>
+      <nav>
+        <div className="flex justify-between items-center px-5">
+          <h1 className="text-3xl font-extrabold italic tracking-tight font-[Zalando_Sans_Expanded]">
+            <Link to="/">
+              <span className="text-indigo-500">SITE</span>
+              <span className="">4</span>
+              <span className="text-indigo-500">SITE</span>
+            </Link>
+          </h1>
+          {/* <div className="flex  items-center justify-end px-6"> */}
           <ul className="flex items-center gap-6 justify-end">
             <li>Docs</li>
             <li>About</li>
@@ -57,8 +56,9 @@ export default function Header() {
               )}
             </li>
           </ul>
-        </nav>
-      </div>
+        </div>
+        {/* </div> */}
+      </nav>
     </header>
   );
 }
