@@ -12,12 +12,12 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
     <>
       <div
         onClick={onClick}
-        className="w-75 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative hover:scale-105 transition-all ease-out cursor-pointer"
+        className="w-60 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative hover:scale-105 transition-all ease-out cursor-pointer"
       >
         <img
           src={anime.image}
           alt={anime.title_english || anime.title}
-          className="object-cover h-100"
+          className="object-fit h-80"
         />
 
         <div
@@ -30,12 +30,12 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
         >
           {anime.status}
         </div>
-        <div className="mt-3 flex flex-col gap-4 px-2 text-sm justify-center z-10">
+        <div className="mt-1 flex flex-col gap-2 px-2 text-sm justify-center z-10">
           <h1 className="text-center text-lg text-card-foreground font-extrabold font-[Urbanist] ">
             {anime.title_english || anime.title}
           </h1>
           {anime.genres?.length > 0 && (
-            <div className="flex gap-2 mt-2 flex-wrap">
+            <div className="flex gap-2  flex-wrap">
               {anime.genres.map((g) => (
                 <GenrePills key={g.mal_id} genre={g.name} />
               ))}

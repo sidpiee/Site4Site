@@ -141,11 +141,11 @@ function RouteComponent() {
       {planned.length !== 0 && (
         <div className="mb-10">
           <section>
-            <h1 className="text-6xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+            <h1 className="text-3xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Plan to Watch
             </h1>
-            <div className="h-1 w-110 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
+            <div className="h-1 w-100 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
               {planned.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
@@ -164,11 +164,11 @@ function RouteComponent() {
       {watching.length !== 0 && (
         <div className="mb-10">
           <section>
-            <h1 className="text-6xl  text-transparent bg-linear-to-r from-indigo-500 to-indigo-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+            <h1 className="text-3xl  text-transparent bg-linear-to-r from-indigo-500 to-indigo-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Watching
             </h1>
-            <div className="h-1 w-140 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
+            <div className="h-1 w-175 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
               {watching.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
@@ -188,11 +188,11 @@ function RouteComponent() {
       {completed.length !== 0 && (
         <div className="mb-10">
           <section>
-            <h1 className="text-6xl  text-transparent bg-linear-to-r from-emerald-500 to-emerald-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
+            <h1 className="text-3xl  text-transparent bg-linear-to-r from-emerald-500 to-emerald-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Completed
             </h1>
-            <div className="h-1 w-180 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-4 gap-x-5 gap-y-10">
+            <div className="h-1 w-250 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
+            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
               {completed.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
