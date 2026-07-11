@@ -75,7 +75,7 @@ export default function TaskCard({
     updateMutation.mutate(updatedText);
   }
   return (
-    <div className="w-full bg-gray-100 dark:bg-card drop-shadow-black/30 drop-shadow-sm flex items-center justify-start p-5 rounded-2xl gap-4 border-border border mt-4">
+    <div className="w-full bg-gray-100 dark:bg-card dark:drop-shadow-white/10 drop-shadow-black/30 drop-shadow-sm flex items-center justify-start p-5 rounded-2xl gap-4 border-border border mt-4">
       <button
         disabled={isEditing}
         className={cn(
