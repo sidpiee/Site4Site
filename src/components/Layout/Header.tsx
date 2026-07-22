@@ -4,7 +4,6 @@ import { Button } from '../ui/button';
 import { useAuth } from '../Context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default function Header() {
   const { user, isLoading } = useAuth();
@@ -41,7 +40,7 @@ export default function Header() {
             <li className="hidden sm:list-item">
               <Link to="/docs">Docs</Link>
             </li>
-            <li className="hidden md:list-item">About</li>
+            {/* <li className="hidden md:list-item">About</li> */}
             <li>
               <ModeToggle />
             </li>

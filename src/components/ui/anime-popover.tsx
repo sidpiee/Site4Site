@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { Anime, AnimeListItem, SavedAnime } from '../Types/anime';
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../Context/AuthContext';
 type AnimePopOverProps = {
   selectedAnime: Anime | SavedAnime;
@@ -142,6 +142,20 @@ export default function AnimePopOver({
       setSelectedAnime(null);
     },
   });
+  const getGenresQuery = useQuery({
+    queryKey: ['anime-genres', selectedAnime.mal_id],
+    queryFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/anime/getGenres/${selectedAnime.mal_id}`,
+      );
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+      return res.json();
+    },
+    enabled: !isSavedAnime && !!selectedAnime?.mal_id,
+  });
   function saveDetails() {
     if (isSavedAnime) return;
 
@@ -151,7 +165,7 @@ export default function AnimePopOver({
       title_english: selectedAnime.title_english,
       images: selectedAnime.images,
       episodes: selectedAnime.episodes,
-      genres: selectedAnime.genres,
+      genres: getGenresQuery.data?.data ?? [],
       status: status,
       rating: rating,
       episodesWatched: epWatched,
@@ -257,8 +271,12 @@ export default function AnimePopOver({
             </Button>
           </div>
         ) : (
-          <Button className="self-center cursor-pointer" onClick={saveDetails}>
-            Save Changes
+          <Button
+            className="self-center cursor-pointer"
+            onClick={saveDetails}
+            disabled={getGenresQuery.isLoading}
+          >
+            {getGenresQuery.isLoading ? 'Loading details...' : 'Save Changes'}
           </Button>
         )}
       </div>
