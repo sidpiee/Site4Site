@@ -9,7 +9,7 @@ import SearchResult from '@/components/ui/search-result';
 import Loding from '@/components/ui/loding-state';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import AnimePopOver from '@/components/ui/anime-popover';
-import type { SavedAnime } from '@/components/Types/anime';
+import type { Anime, SavedAnime } from '@/components/Types/anime';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/Context/AuthContext';
 
@@ -29,7 +29,9 @@ export const Route = createFileRoute('/anime/')({
 function RouteComponent() {
   const { session } = useAuth();
   const [search, setSearch] = useState<string>('');
-  const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
+  const [selectedAnime, setSelectedAnime] = useState<SavedAnime | Anime | null>(
+    null,
+  );
   const debouncedSearch = useDebounce(search, 1200);
 
   const { data, isLoading, isError, error } = useQuery({
@@ -109,7 +111,7 @@ function RouteComponent() {
         )}
         {data?.data?.length > 0 && (
           <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
-            {data.data.map((anime: any) => (
+            {data.data.map((anime: Anime) => (
               <SearchResult
                 key={anime.mal_id}
                 imgSrc={anime.images.jpg.large_image_url}

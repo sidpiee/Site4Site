@@ -9,7 +9,10 @@ import Loding from '@/components/ui/loding-state';
 import SearchResult from '@/components/ui/search-result';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import MoviePopOver from '@/components/ui/movie-popover';
-import { type DbMovie, type MovieListItem } from '@/components/Types/movie';
+import {
+  type DbMovie,
+  type MovieListItem,
+} from '@/components/Types/movie';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/Context/AuthContext';
 import { toast } from 'sonner';
