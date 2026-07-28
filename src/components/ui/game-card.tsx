@@ -23,7 +23,7 @@ export default function GameCard({
     <>
       <div
         className={cn(
-          'hover:scale-105 transition-all ease-out cursor-pointer h-70 w-100 flex flex-col relative dark:bg-black/60 bg-slate-200/70  rounded-3xl overflow-hidden border-t-4  border-l-4 drop-shadow-md dark:drop-shadow-white/20 drop-shadow-black/30',
+          'hover:scale-102 transition-all ease-out cursor-pointer h-70 w-100 flex flex-col relative dark:bg-black/60 bg-slate-200/70  rounded-3xl overflow-hidden border-t-4  border-l-4 drop-shadow-md dark:drop-shadow-white/20 drop-shadow-black/30',
           status === 'playing' && 'border-t-blue-500 border-l-blue-500',
           status === 'completed' && 'border-y-emerald-500 border-l-emerald-500',
           status === 'dropped' && 'border-y-red-500 border-l-red-500',
