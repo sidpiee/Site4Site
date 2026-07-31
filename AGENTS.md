@@ -13,19 +13,12 @@
 ## Commands
 - npm run dev
 - npm run lint
-- npm test
 
 ## Code Style
 - Prefer async/await
 - Use TypeScript strict mode
 - Do not use `any`
 - Keep controllers focused
-
-## Backend Rules
-- Validate all inputs
-- Return APIError for expected errors
-- Protect private routes with requireAuth
-- Use Mongoose models
 
 ## Frontend Rules
 - Use TanStack Query for server state

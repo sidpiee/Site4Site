@@ -169,7 +169,7 @@ export default function SectionCard({
         )}
 
         {isEditing ? (
-          <div className="relative flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
+          <div className="flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
             <Button className="cursor-pointer" onClick={updateSection}>
               Save
             </Button>
@@ -211,15 +211,6 @@ export default function SectionCard({
               Add Site
               <Plus className="h-4 w-4" />
             </Button>
-            {open && (
-              <InputBox
-                addSite={addsite}
-                sectionId={section._id}
-                close={() => setOpen(false)}
-                opendropdown={() => setDropdown(true)}
-              />
-            )}
-
             <button
               className="flex items-center justify-center rounded-md p-1 hover:bg-muted cursor-pointer"
               onClick={() => setDropdown((prevDropdown) => !prevDropdown)}
@@ -229,6 +220,14 @@ export default function SectionCard({
           </div>
         )}
       </div>
+      {open && (
+        <InputBox
+          addSite={addsite}
+          sectionId={section._id}
+          close={() => setOpen(false)}
+          opendropdown={() => setDropdown(true)}
+        />
+      )}
       <div className="mt-3">
         {dropdown &&
           section.sites.map((site) => (
@@ -259,10 +258,7 @@ function InputBox({ addSite, sectionId, close, opendropdown }: InputBoxProps) {
     opendropdown();
   }
   return (
-    <div
-      className="bg-card p-5 w-100 h-fit rounded-2xl absolute top-full mt-3 right-0 z-50
-"
-    >
+    <div className="mt-4 w-full max-w-md self-end rounded-2xl bg-card p-5">
       <form action={takeinput} className="flex flex-col items-start gap-4">
         <FieldGroup className="flex flex-col justify-center gap-3">
           <Field>
