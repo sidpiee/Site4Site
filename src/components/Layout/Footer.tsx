@@ -1,5 +1,5 @@
-import logo from "/Logo.svg";
-import { Copyright, Github, Linkedin, Mail } from "lucide-react";
+import logo from '/Logo.svg';
+import { Copyright, Github, Linkedin, Mail } from 'lucide-react';
 export default function Footer() {
   return (
     <footer>
@@ -31,7 +31,13 @@ export default function Footer() {
           >
             <Linkedin />
           </a>
-          <Mail />
+          <a
+            href="mailto:site4site.dev@gmail.com"
+            aria-label="Email Site4Site"
+            title="Email me"
+          >
+            <Mail />
+          </a>
         </div>
       </div>
     </footer>
