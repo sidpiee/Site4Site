@@ -12,11 +12,10 @@ export default function InputBox({ addsection }: InputBoxProps) {
   }
   return (
     <div
-      className="bg-card p-5 w-100 h-50 rounded-2xl absolute top-full mt-3 left-0 z-50
-"
+      className="absolute top-full left-0 z-50 mt-3 h-auto w-[calc(100vw-1.5rem)] max-w-md rounded-2xl bg-card p-4 shadow-xl sm:p-5"
     >
-      <form action={takeinput} className="flex flex-col items-start gap-8">
-        <FieldGroup className="grid max-w-sm grid-cols-2">
+      <form action={takeinput} className="flex flex-col items-start gap-5">
+        <FieldGroup className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="title">Title</FieldLabel>
             <Input
@@ -37,7 +36,7 @@ export default function InputBox({ addsection }: InputBoxProps) {
             />
           </Field>
         </FieldGroup>
-        <Button type="submit" className="cursor-pointer">
+        <Button type="submit" className="w-full cursor-pointer sm:w-auto">
           Submit
         </Button>
       </form>

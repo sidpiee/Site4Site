@@ -133,26 +133,26 @@ export default function SectionCard({
     updateMutation.mutate({ title: updatedTitle, description: updatedDes });
   }
   return (
-    <div className="flex flex-col bg-muted/70 dark:bg-muted/20 px-6 py-4 rounded-md mt-4 border dark:border-white/30 border-black/50 drop-shadow-xl">
+    <div className="mt-4 flex flex-col rounded-md border border-black/50 bg-muted/70 px-4 py-4 drop-shadow-xl dark:border-white/30 dark:bg-muted/20 sm:px-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-start">
         {isEditing ? (
           <div className="flex min-w-0 flex-1 flex-col gap-5">
-            <div className="flex items-center">
-              <span className="font-[Urbanist] font-semibold">Title</span>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="shrink-0 font-[Urbanist] font-semibold">Title</span>
               <Input
                 value={draftTitle}
                 onChange={(e) => setDraftTitle(e.target.value)}
                 autoFocus
-                className="mx-10"
+                className="mx-0 flex-1 sm:mx-4"
                 placeholder="Title"
               />
             </div>
-            <div className="flex items-center">
-              <span className="font-[Urbanist] font-semibold">Description</span>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="shrink-0 font-[Urbanist] font-semibold">Description</span>
               <Input
                 value={draftDes}
                 onChange={(e) => setDraftDes(e.target.value)}
-                className="mx-10"
+                className="mx-0 flex-1 sm:mx-4"
                 placeholder="description"
               />
             </div>
@@ -169,7 +169,7 @@ export default function SectionCard({
         )}
 
         {isEditing ? (
-          <div className="flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
+          <div className="flex shrink-0 flex-wrap items-center justify-start gap-2 md:justify-end">
             <Button className="cursor-pointer" onClick={updateSection}>
               Save
             </Button>
@@ -185,7 +185,7 @@ export default function SectionCard({
             </Button>
           </div>
         ) : (
-          <div className="relative flex shrink-0 flex-wrap items-center justify-start gap-3 md:justify-end">
+          <div className="relative flex shrink-0 flex-wrap items-center justify-start gap-2 md:justify-end">
             <Button
               className="cursor-pointer"
               onClick={() => {

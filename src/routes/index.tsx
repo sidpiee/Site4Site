@@ -13,20 +13,20 @@ function RouteComponent() {
   return (
     <>
       <div className="relative bg-linear-to-t from-blue-200 via-blue-300 to-blue-400 min-h-screen  w-full dark:bg-linear-to-t dark:from-blue-950 dark:via-indigo-950 dark:to-sky-950 z-0">
-        <div className=" flex justify-center items-center min-h-screen flex-col p-10 relative">
+        <div className="relative flex min-h-screen flex-col items-center justify-center p-5 text-center sm:p-10">
           <RetroGrid darkLineColor="white" />
 
-          <h1 className="font-[jost] font-bold italic text-indigo-500 dark:text-white text-6xl text-center z-10">
+          <h1 className="z-10 max-w-4xl font-[jost] text-4xl font-bold italic text-indigo-500 dark:text-white sm:text-5xl md:text-6xl">
             Tired of digging through <AuroraText> bookmarks </AuroraText> just
             to find that one thing?
           </h1>
-          <h2 className="mt-6 font-[figtree] italic  z-10">
+          <h2 className="z-10 mt-6 max-w-2xl px-2 font-[figtree] text-sm italic sm:text-base">
             <TypingAnimation typeSpeed={30} delay={1000}>
               Save, organize, and rediscover your favorite sites with Site4Site.
             </TypingAnimation>
           </h2>
-          <Link to="/docs">
-            <Button className=" relative z-50 cursor-pointer ">
+          <Link to="/docs" className="z-50 mt-8">
+            <Button className="relative cursor-pointer">
               Get Started
             </Button>
           </Link>

@@ -85,14 +85,14 @@ function RouteComponent() {
   });
   return (
     <MainLayout>
-      <div className="relative">
+      <div className="relative mb-2">
         <SearchBar
           placeholder="Elden Ring..."
           Search={search}
           SetSearch={setSearch}
         />
         {isLoading && (
-          <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm">
+          <div className="absolute left-0 top-full z-20 mt-2 w-full max-w-sm shadow-lg">
             <Loding />
           </div>
         )}
@@ -102,7 +102,7 @@ function RouteComponent() {
           </p>
         )}
         {data?.data?.results?.length > 0 && (
-          <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
+          <div className="absolute left-0 top-full z-20 mt-2 max-h-90 w-full max-w-sm overflow-y-auto shadow-lg no-scrollbar">
             {data.data.results.map((game: GameListItem) => (
               <SearchResult
                 key={game.id}
@@ -128,7 +128,7 @@ function RouteComponent() {
             }
           }}
         >
-          <DialogContent className="p-0 overflow-hidden max-w-4xl">
+          <DialogContent className="max-h-[90dvh] max-w-[calc(100%-1rem)] overflow-y-auto p-0 sm:max-w-4xl">
             <GamePopOver
               game={particularGameQuery.data.data}
               setSelectedGame={setSelectedGame}
@@ -145,7 +145,7 @@ function RouteComponent() {
         </div>
       )}
 
-      <div className="grid grid-cols-3 mt-8 gap-y-3 gap-x-5">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {games.map((g: GameListItem) => (
           <GameCard
             key={g.id}

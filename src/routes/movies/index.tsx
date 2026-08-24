@@ -140,7 +140,7 @@ function RouteComponent() {
 
   return (
     <MainLayout>
-      <div className="flex justify-between relative ">
+      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <SearchBar
           placeholder="Titanic..."
           Search={search}
@@ -148,7 +148,7 @@ function RouteComponent() {
         />
         <BtnGroup active={filter} setActive={setFilter} />
         {data?.data?.Search?.length > 0 && (
-          <div className=" shadow-lg absolute mt-9 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
+        <div className="absolute left-0 top-full z-20 mt-2 max-h-90 w-full max-w-sm overflow-y-auto shadow-lg no-scrollbar">
             {data?.data?.Search?.map((movie: any) => (
               <SearchResult
                 imgSrc={movie.Poster}
@@ -163,13 +163,13 @@ function RouteComponent() {
           </div>
         )}
         {isLoading && (
-          <div className="absolute mt-9 shadow-lg z-20 min-w-sm">
+          <div className="absolute left-0 top-full z-20 mt-2 w-full max-w-sm shadow-lg">
             <Loding />
           </div>
         )}
       </div>
       {isError && (
-        <p className="mt-5 text-center w-100 text-red-500 font-semibold font-[Figtree] ">
+        <p className="mt-5 w-full text-center text-red-500 font-semibold font-[Figtree]">
           Movie not found!
         </p>
       )}
@@ -183,7 +183,7 @@ function RouteComponent() {
             }
           }}
         >
-          <DialogContent className="p-0 overflow-hidden max-w-4xl">
+          <DialogContent className="max-h-[90dvh] max-w-[calc(100%-1rem)] overflow-y-auto p-0 sm:max-w-4xl">
             <MoviePopOver
               movie={particularMovieQuery.data.data}
               setSelectedMovie={setSelectedMovie}
@@ -194,7 +194,7 @@ function RouteComponent() {
         </Dialog>
       )}
       {filteredMovies.length !== 0 && (
-        <div className="grid grid-cols-3  mt-6">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredMovies.map((m: MovieListItem) => (
             <MovieCard
               movie={m}
@@ -224,7 +224,7 @@ function RouteComponent() {
 
 function BtnGroup({ active, setActive }: BtnGroupProps) {
   const baseStyle =
-    'px-3 py-2 rounded-3xl text-sm font-medium transition-all duration-200 cursor-pointer';
+    'shrink-0 rounded-3xl px-2 py-2 text-xs font-medium transition-all duration-200 cursor-pointer sm:px-3 sm:text-sm';
 
   const activeStyle =
     'bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-md';
@@ -233,7 +233,7 @@ function BtnGroup({ active, setActive }: BtnGroupProps) {
     'dark:text-white text-black hover:text-slate-400 dark:hover:text-slate-400';
 
   return (
-    <div className="flex dark:bg-card  rounded-3xl  border border-black/40 dark:border-white/20 gap-5 w-fit">
+    <div className="flex w-full max-w-full gap-1 overflow-x-auto rounded-3xl border border-black/40 p-1 dark:bg-card dark:border-white/20 sm:w-fit sm:gap-2">
       <button
         onClick={() => setActive('watched')}
         className={`${baseStyle} ${

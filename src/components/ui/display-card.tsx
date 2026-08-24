@@ -55,7 +55,7 @@ export default function DisplayCard({
     setIsEditing(false);
   }
   return (
-    <div className="bg-card min-h-22 w-full px-6 py-4 rounded-l-lg mt-3 flex flex-col items-start justify-start gap-4 border-border border-4 sm:flex-row sm:items-center">
+    <div className="mt-3 flex min-h-22 w-full flex-col items-start justify-start gap-4 rounded-lg border-4 border-border bg-card px-4 py-4 sm:flex-row sm:items-center sm:px-6">
       <div className="shrink-0 bg-background/80 rounded-md p-2">
         <img
           src={`https://www.google.com/s2/favicons?domain=${url}&sz=32`}
@@ -90,7 +90,7 @@ export default function DisplayCard({
             rel="noopener noreferrer"
             className="min-w-0 max-w-full"
           >
-            <h1 className="font-[Urbanist] font-semibold text-card-foreground text-3xl leading-tight tracking-wide break-words [overflow-wrap:anywhere]">
+            <h1 className="break-words font-[Urbanist] text-2xl font-semibold leading-tight tracking-wide text-card-foreground [overflow-wrap:anywhere] sm:text-3xl">
               {name}
             </h1>
           </a>
@@ -100,7 +100,7 @@ export default function DisplayCard({
         </div>
       )}
       {isEditing ? (
-        <div className="flex w-full shrink-0 justify-end sm:w-auto gap-5">
+        <div className="flex w-full shrink-0 justify-end gap-2 sm:w-auto sm:gap-5">
           <Button onClick={saveSite} className="cursor-pointer">
             Save
           </Button>{' '}
@@ -118,7 +118,7 @@ export default function DisplayCard({
           </Button>
         </div>
       ) : (
-        <div className="flex w-full shrink-0 justify-end sm:w-auto gap-5">
+        <div className="flex w-full shrink-0 justify-end gap-2 sm:w-auto sm:gap-5">
           <Button
             onClick={() => {
               setIsEditing(true);

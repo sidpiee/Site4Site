@@ -187,18 +187,18 @@ export default function AnimePopOver({
     deleteMutation.mutate();
   }
   return (
-    <div className="h-120 w-full flex justify-start items-start">
+    <div className="flex h-auto min-h-120 w-full flex-col items-start justify-start sm:flex-row">
       <img
         src={imageSrc}
         alt={selectedAnime.title_english || selectedAnime.title}
-        className="h-full w-2/5 object-cover"
+        className="h-56 w-full object-cover sm:h-full sm:w-2/5"
       />
 
-      <div className=" flex flex-col gap-8 justify-start items-start px-3 py-6">
-        <h1 className="font-[Urbanist] font-bold text-md ">
+      <div className="flex w-full flex-col items-start justify-start gap-5 px-4 py-5 sm:w-3/5 sm:gap-8 sm:px-3 sm:py-6">
+        <h1 className="w-full break-words font-[Urbanist] text-lg font-bold">
           {selectedAnime.title_english || selectedAnime.title}
         </h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             className={cn(
               'dark:bg-indigo-600 bg-indigo-300 cursor-pointer  border border-black/40 dark:border-white  px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold',
@@ -233,7 +233,7 @@ export default function AnimePopOver({
             Completed
           </button>
         </div>
-        <p className="flex font-medium items-center text-sm gap-2 font-[Urbanist]">
+        <p className="flex flex-wrap items-center gap-2 text-sm font-medium font-[Urbanist]">
           Episodes Watched{' '}
           <EpWatched
             totalEpisodes={selectedAnime.episodes || 0}
@@ -244,7 +244,7 @@ export default function AnimePopOver({
             /{selectedAnime.episodes || 0}
           </span>
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-3">
           <p className="font-[Urbanist] font-medium text-md">Your rating</p>
           <RatingSection value={rating} setRating={setRating} />
         </div>
@@ -252,13 +252,13 @@ export default function AnimePopOver({
           value={note}
           placeholder="only got 50 words! make em count..."
           maxLength={50}
-          className="bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50"
+          className="w-full bg-gray-200/80 placeholder:text-black/50 dark:placeholder:text-white/50"
           onChange={(e) => setNote(e.target.value)}
         />
         {isSavedAnime ? (
-          <div className="flex gap-15">
+          <div className="flex w-full flex-wrap gap-2">
             <Button
-              className="self-center cursor-pointer "
+              className="cursor-pointer"
               onClick={UpdateDetails}
             >
               Update Changes

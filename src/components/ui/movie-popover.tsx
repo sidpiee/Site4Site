@@ -156,20 +156,20 @@ export default function MoviePopOver({
   }
   return (
     <>
-      <div className="bg-background h-140 w-full flex">
+      <div className="flex max-h-[80vh] w-full flex-col overflow-y-auto bg-background sm:h-140 sm:max-h-none sm:flex-row">
         <img
           src={movie.Poster}
           alt={movie.Title}
-          className="object-cover w-[35%] h-full"
+          className="h-64 w-full object-cover sm:h-full sm:w-[35%]"
           onError={(e) => {
             e.currentTarget.src = no_image_found;
           }}
         />
-        <div className="flex flex-col flex-1 items-start pt-10 gap-2">
-          <p className="font-[Urbanist] text-center w-full font-bold text-2xl">
+        <div className="flex w-full flex-1 flex-col items-start gap-2 p-4 sm:pt-10">
+          <p className="w-full text-center font-[Urbanist] text-xl font-bold sm:text-2xl">
             {movie.Title} ({movie.Year})
           </p>
-          <div className="pl-5  flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 pl-0 sm:pl-5">
             <img src={IMDB} alt="" className="size-10" />
             <p className="font-[Figtree] font-bold text-yellow-300">
               {movie.imdbRating}/10
@@ -178,7 +178,7 @@ export default function MoviePopOver({
             <img
               src={RottenTomatoes}
               alt=""
-              className="size-10 rounded-full ml-6"
+              className="ml-2 size-10 rounded-full sm:ml-6"
             />
             <p className="font-[Figtree] font-bold text-red-500">
               {rottenTomatoes}
@@ -186,19 +186,19 @@ export default function MoviePopOver({
             <p className="ml-0.5">🍅</p>
           </div>
 
-          <div className="flex pl-2 items-center">
+          <div className="flex items-center pl-0 sm:pl-2">
             <img src={Length} alt="" className="h-10" />
             <p className="font-[Figtree] font-bold">{movie.Runtime} • </p>
           </div>
-          <div className="flex pl-5 gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2 pl-0 sm:pl-5">
             {genres.map((g) => (
               <GenrePills key={g} genre={g} />
             ))}
           </div>
-          <p className="px-5 text-xs font-semibold  italic leading-relaxed text-muted-foreground">
+          <p className="px-0 text-xs font-semibold italic leading-relaxed text-muted-foreground sm:px-5">
             "{movie.Plot}"
           </p>
-          <div className="flex gap-2 px-4 justify-around w-full mt-3 pb-2">
+          <div className="mt-3 flex w-full flex-wrap justify-start gap-2 px-0 pb-2 sm:justify-around sm:px-4">
             <Button
               className="m-0 cursor-pointer"
               onClick={() => setStatus('watched')}
@@ -212,7 +212,7 @@ export default function MoviePopOver({
               Plan to watch{status === 'plan' && <Check />}
             </Button>
           </div>
-          <div className="w-full px-2">
+          <div className="w-full px-0 sm:px-2">
             <Textarea
               value={note}
               placeholder="50 words to write your heart out!..."
@@ -223,7 +223,7 @@ export default function MoviePopOver({
           </div>
           <div className="flex justify-center w-full">
             {savedMovie ? (
-              <div className="flex gap-15">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   className=" cursor-pointer dark:bg-indigo-900 border-l-2 border-white/50 bg-indigo-700 px-2 hover:dark:bg-indigo-950 hover:scale-110"
                   onClick={updateDetails}

@@ -3,11 +3,11 @@ import { Copyright, Github, Linkedin, Mail } from 'lucide-react';
 export default function Footer() {
   return (
     <footer>
-      <div className="w-full bg-footer text-foreground px-4  flex border-t">
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-start items-center gap-4">
+      <div className="flex w-full flex-col gap-4 border-t bg-footer px-4 py-4 text-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex items-center gap-3">
             <img src={logo} alt="" className="h-5 w-5" />
-            <h1 className="text-md  font-[Poppins] italic font-semibold">
+            <h1 className="truncate text-sm font-[Poppins] italic font-semibold sm:text-md">
               Save it. Tag it. Remember why.
             </h1>
           </div>
@@ -16,7 +16,7 @@ export default function Footer() {
             All rights reserved.
           </h1>
         </div>
-        <div className=" flex flex-1 justify-end px-10 items-center gap-10">
+        <div className="flex items-center justify-start gap-6 sm:justify-end sm:gap-8">
           <a
             href="https://github.com/sidpiee"
             target="_blank"

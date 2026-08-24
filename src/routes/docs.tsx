@@ -101,7 +101,7 @@ function RouteComponent() {
   return (
     <MainLayout>
       <main className="mx-auto w-full max-w-8xl pb-8">
-        <section className="relative overflow-hidden rounded-3xl border bg-linear-to-br from-indigo-500/15 via-background to-sky-500/10 px-6 py-10 sm:px-10 sm:py-14">
+        <section className="relative overflow-hidden rounded-3xl border bg-linear-to-br from-indigo-500/15 via-background to-sky-500/10 px-4 py-8 sm:px-10 sm:py-14">
           <div
             aria-hidden="true"
             className="absolute -right-20 -top-24 size-64 rounded-full bg-indigo-500/15 blur-3xl"
@@ -111,7 +111,7 @@ function RouteComponent() {
               <BookmarkPlus className="size-4" />
               Your Site4Site guide
             </div>
-            <h1 className="font-[Urbanist] text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="font-[Urbanist] text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
               Keep the good stuff.
               <span className="block text-indigo-500 mt-4">
                 Find it when it matters.
@@ -123,13 +123,13 @@ function RouteComponent() {
               few minutes.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="cursor-pointer">
+              <Button asChild size="lg" className="w-full cursor-pointer sm:w-auto">
                 <Link to="/signIn">
                   Get started
                   <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                 <a href="#features">Explore features</a>
               </Button>
             </div>
@@ -202,7 +202,7 @@ function RouteComponent() {
               return (
                 <article
                   key={feature.title}
-                  className={`flex min-h-64 flex-col rounded-3xl border bg-background p-6 transition-all hover:-translate-y-0.5 hover:border-indigo-500/40 hover:shadow-lg ${index === 0 ? 'md:col-span-2 md:min-h-56' : ''}`}
+                  className={`flex min-h-56 flex-col rounded-3xl border bg-background p-5 transition-all hover:-translate-y-0.5 hover:border-indigo-500/40 hover:shadow-lg sm:min-h-64 sm:p-6 ${index === 0 ? 'md:col-span-2 md:min-h-56' : ''}`}
                 >
                   <div
                     className={`flex size-11 items-center justify-center rounded-2xl ${feature.accent}`}
@@ -215,7 +215,7 @@ function RouteComponent() {
                   <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
                     {feature.description}
                   </p>
-                  <Button
+              <Button
                     asChild
                     variant="link"
                     className="mt-auto h-auto w-fit justify-start px-0 pt-6 text-indigo-500"
@@ -291,7 +291,7 @@ function RouteComponent() {
               asChild
               size="lg"
               variant="secondary"
-              className="shrink-0 bg-white text-indigo-700 hover:bg-indigo-50"
+              className="w-full shrink-0 bg-white text-indigo-700 hover:bg-indigo-50 md:w-auto"
             >
               <Link to="/signIn">
                 Create your library

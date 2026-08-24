@@ -68,24 +68,24 @@ function RouteComponent() {
 
   return (
     <div className="dark">
-      <div className="min-h-screen bg-background text-foreground bg-linear-to-tr from-black via-white/5 to-black flex flex-col items-center gap-10">
+      <div className="flex min-h-screen flex-col items-center gap-6 bg-background bg-linear-to-tr from-black via-white/5 to-black px-3 text-foreground sm:gap-10">
         <img
           src={logo}
           alt=""
-          className="z-0 opacity-5 h-screen w-full absolute"
+          className="absolute z-0 h-screen w-full object-cover opacity-5"
         />
-        <h1 className="text-5xl font-extrabold italic tracking-tight font-[Zalando_Sans_Expanded] text-center pt-10 z-10 ">
+        <h1 className="z-10 pt-8 text-4xl font-extrabold italic tracking-tight font-[Zalando_Sans_Expanded] text-center sm:pt-10 sm:text-5xl">
           <Link to="/" className="">
             <span className="text-indigo-500">SITE</span>
             <span className="">4</span>
             <span className="text-indigo-500">SITE</span>
           </Link>
         </h1>
-        <div className="border-2 border-white/30  backdrop-blur-4xl bg-black/50  p-5 w-100 rounded-lg z-10 ">
-          <p className="text-center text-3xl mb-5 font-bold font-[Urbanist]">
+        <div className="z-10 w-[calc(100vw-1.5rem)] max-w-md rounded-lg border-2 border-white/30 bg-black/50 p-4 backdrop-blur-4xl sm:p-5">
+          <p className="mb-5 text-center text-2xl font-bold font-[Urbanist] sm:text-3xl">
             Verify Account
           </p>
-          <FieldSet className="w-full max-w-xs flex flex-col ">
+          <FieldSet className="flex w-full max-w-xs flex-col mx-auto">
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="Email">Email</FieldLabel>

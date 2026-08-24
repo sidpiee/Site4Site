@@ -12,17 +12,17 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
     <>
       <div
         onClick={onClick}
-        className="w-60 dark:bg-card border-black/30 border dark:border-white/30 bg-slate-300/10 h-fit pb-2 flex flex-col rounded-2xl overflow-hidden backdrop-blur-2xl relative hover:scale-105 transition-all ease-out cursor-pointer"
+        className="relative flex h-fit min-w-0 w-full flex-col overflow-hidden rounded-2xl border border-black/30 bg-slate-300/10 pb-2 backdrop-blur-2xl transition-all ease-out hover:scale-[1.02] dark:border-white/30 dark:bg-card cursor-pointer"
       >
         <img
           src={anime.image}
           alt={anime.title_english || anime.title}
-          className="object-fit h-80"
+          className="aspect-3/4 h-auto w-full object-cover"
         />
 
         <div
           className={cn(
-            'absolute top-2 right-2 px-2 py-1 text-sm rounded-full backdrop-blur-2xl shadow-md font-[Urbanist] font-semibold border-2 border-white/50',
+            'absolute right-2 top-2 rounded-full border-2 border-white/50 px-2 py-1 text-xs font-[Urbanist] font-semibold shadow-md backdrop-blur-2xl sm:text-sm',
             anime.status === 'Plan to watch' && 'bg-violet-500',
             anime.status === 'Completed' && 'bg-emerald-500',
             anime.status === 'Watching' && 'bg-indigo-500',
@@ -30,12 +30,12 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
         >
           {anime.status}
         </div>
-        <div className="mt-1 flex flex-col gap-2 px-2 text-sm justify-center z-10">
-          <h1 className="text-center text-lg text-card-foreground font-extrabold font-[Urbanist] ">
+        <div className="z-10 mt-1 flex flex-col justify-center gap-2 px-2 text-sm">
+          <h1 className="text-center text-base font-extrabold text-card-foreground font-[Urbanist] sm:text-lg">
             {anime.title_english || anime.title}
           </h1>
           {anime.genres?.length > 0 && (
-            <div className="flex gap-2  flex-wrap">
+            <div className="flex flex-wrap gap-1.5">
               {anime.genres.map((g) => (
                 <GenrePills key={g.mal_id} genre={g.name} />
               ))}
@@ -47,10 +47,10 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
               htmlFor="episodes-watched"
               className="flex justify-between "
             >
-              <span className="font-[Urbanist] font-semibold">
+              <span className="font-[Urbanist] text-xs font-semibold sm:text-sm">
                 Episodes Watched
               </span>
-              <span className=" font-[Urbanist] font-semibold">
+              <span className="font-[Urbanist] text-xs font-semibold sm:text-sm">
                 {anime.episodesWatched}/{anime.episodes}
               </span>
             </FieldLabel>
@@ -60,8 +60,8 @@ export default function AnimeCard({ anime, onClick }: AnimeCardProps) {
             />
           </Field>
 
-          <div className="mt-2 p-3 bg-muted/50 rounded-xl border-l-4 border-primary">
-            <p className="text-sm italic text-muted-foreground leading-relaxed">
+          <div className="mt-2 rounded-xl border-l-4 border-primary bg-muted/50 p-2 sm:p-3">
+            <p className="text-xs italic leading-relaxed text-muted-foreground sm:text-sm">
               {notes}
             </p>
           </div>

@@ -210,10 +210,7 @@ function InputBox({ createTask }: InputBoxProps) {
   }
   return (
     <>
-      <div
-        className="bg-card p-5 w-100 rounded-2xl absolute top-full mt-3 left-0 z-50
-"
-      >
+      <div className="absolute top-full left-0 z-50 mt-3 w-[calc(100vw-1.5rem)] max-w-sm rounded-2xl bg-card p-4 shadow-xl sm:p-5">
         <form action={HandleSubmit} className="flex flex-col items-start gap-5">
           <FieldGroup>
             <Field className="">
@@ -227,7 +224,7 @@ function InputBox({ createTask }: InputBoxProps) {
               />
             </Field>
           </FieldGroup>
-          <Button type="submit" className="cursor-pointer">
+          <Button type="submit" className="w-full cursor-pointer sm:w-auto">
             Submit
           </Button>
         </form>

@@ -12,7 +12,7 @@ type SearchBarProps = {
 };
 export function SearchBar({ placeholder, Search, SetSearch }: SearchBarProps) {
   return (
-    <Field className="max-w-sm ">
+    <Field className="w-full max-w-sm">
       <InputGroup className="bg-slate-200/50 dark:border-blue-500 border-blue-300 ">
         <InputGroupInput
           id="inline-end"

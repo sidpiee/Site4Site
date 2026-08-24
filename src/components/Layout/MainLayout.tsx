@@ -8,9 +8,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-svh min-w-0 overflow-hidden">
+      <SidebarInset className="min-h-svh min-w-0 overflow-x-hidden">
         <Header />
-        <div className="flex min-h-0 flex-1 overflow-y-auto p-6 md:p-10 flex-col no-scrollbar">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3 pb-6 sm:p-5 sm:pb-8 md:p-10 no-scrollbar">
           {children}
         </div>
         <Footer />

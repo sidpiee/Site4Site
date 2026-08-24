@@ -75,11 +75,11 @@ export default function TaskCard({
     updateMutation.mutate(updatedText);
   }
   return (
-    <div className="w-full bg-gray-100 dark:bg-card dark:drop-shadow-white/10 drop-shadow-black/30 drop-shadow-sm flex items-center justify-start p-5 rounded-2xl gap-4 border-border border mt-4">
+    <div className="mt-4 flex w-full flex-col items-stretch justify-start gap-4 rounded-2xl border border-border bg-gray-100 p-4 drop-shadow-sm drop-shadow-black/30 dark:bg-card dark:drop-shadow-white/10 sm:flex-row sm:items-center sm:p-5">
       <button
         disabled={isEditing}
         className={cn(
-          'h-8 w-8 rounded-full flex items-center justify-center cursor-pointer',
+          'flex h-8 w-8 shrink-0 items-center justify-center rounded-full cursor-pointer',
           completed ? CompletedClass : InCompleteClass,
           isEditing ? 'disabled:bg-slate-700' : '',
         )}
@@ -92,12 +92,12 @@ export default function TaskCard({
           value={draftText}
           onChange={(e) => setDraftText(e.target.value)}
           autoFocus
-          className="mr-10"
+          className="w-full min-w-0 sm:mr-10"
         />
       ) : (
         <p
           className={cn(
-            'text-foreground  min-w-0 wrap-break-word font-semibold text-xl font-[Urbanist]',
+            'min-w-0 flex-1 wrap-break-word text-lg font-semibold text-foreground font-[Urbanist] sm:text-xl',
             completed && 'line-through',
           )}
         >
@@ -105,16 +105,16 @@ export default function TaskCard({
         </p>
       )}
       {isEditing ? (
-        <div className="flex flex-1 justify-end gap-5">
+        <div className="flex w-full justify-end gap-2 sm:w-auto sm:gap-5">
           <Button
             onClick={updateTask}
-            className="cursor-pointer"
+            className="flex-1 cursor-pointer sm:flex-none"
             disabled={updateMutation.isPending}
           >
             Save
           </Button>{' '}
           <Button
-            className=" cursor-pointer text-destructive-foreground bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
+            className="flex-1 cursor-pointer bg-red-500 text-destructive-foreground hover:bg-red-600 dark:hover:bg-red-800 sm:flex-none"
             onClick={() => {
               setIsEditing(false);
               setDraftText(text);
@@ -125,9 +125,9 @@ export default function TaskCard({
           </Button>
         </div>
       ) : (
-        <div className="flex flex-1 justify-end gap-5">
+        <div className="flex w-full justify-end gap-2 sm:w-auto sm:gap-5">
           <Button
-            className="cursor-pointer"
+            className="flex-1 cursor-pointer sm:flex-none"
             onClick={() => {
               setDraftText(text);
               setIsEditing(true);
@@ -137,7 +137,7 @@ export default function TaskCard({
           </Button>
           <Button
             size={'sm'}
-            className=" cursor-pointer text-destructive-foreground bg-red-500  hover:bg-red-600 dark:hover:bg-red-800"
+            className="flex-1 cursor-pointer bg-red-500 text-destructive-foreground hover:bg-red-600 dark:hover:bg-red-800 sm:flex-none"
             onClick={() => deleteTask(id)}
           >
             Delete

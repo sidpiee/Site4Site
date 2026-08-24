@@ -226,7 +226,7 @@ export default function GamePopOver({
     deleteGameMutation.mutate();
   }
   return (
-    <div className="relative min-h-160 w-full ">
+    <div className="relative min-h-[36rem] w-full sm:min-h-160">
       <img
         src={
           screenshotIndex === -1
@@ -234,11 +234,11 @@ export default function GamePopOver({
             : screenshots[screenshotIndex]
         }
         alt={game.name}
-        className="absolute inset-0 w-full h-[45%] object-cover"
+        className="absolute inset-x-0 top-0 h-52 w-full object-cover sm:h-[45%]"
       />
       <Button
         variant="ghost"
-        className="absolute z-20 top-35 right-0 hover:bg-white/20 cursor-pointer"
+         className="absolute right-0 top-44 z-20 cursor-pointer hover:bg-white/20 sm:top-35"
         onClick={() =>
           setScreenshotIndex((prev) => {
             if (screenshots.length === 0) {
@@ -255,7 +255,7 @@ export default function GamePopOver({
       </Button>
       <Button
         variant="ghost"
-        className="absolute top-35 z-20 left-0 hover:bg-white/20 cursor-pointer"
+         className="absolute left-0 top-44 z-20 cursor-pointer hover:bg-white/20 sm:top-35"
         onClick={() =>
           setScreenshotIndex((prev) => {
             if (screenshots.length === 0) {
@@ -272,10 +272,10 @@ export default function GamePopOver({
       </Button>
       <div className="hidden dark:block absolute inset-0 bg-linear-to-b from-transparent via-[#111827]/60 to-[#111827] pointer-events-none" />
 
-      <div className="relative pt-60 px-6 pb-6 flex flex-col gap-5">
-        <div className="flex items-start justify-between">
+      <div className="relative flex flex-col gap-5 px-4 pb-6 pt-56 sm:px-6 sm:pt-60">
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="font-[Urbanist] font-bold text-3xl text-white ">
+            <h1 className="break-words font-[Urbanist] text-2xl font-bold text-white sm:text-3xl">
               {game.name}
             </h1>
           </div>
@@ -294,7 +294,7 @@ export default function GamePopOver({
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 text-sm font-[Urbanist]">
+        <div className="grid grid-cols-1 gap-3 text-sm font-[Urbanist] sm:grid-cols-2 sm:gap-4">
           <div className="flex items-center gap-3 font-[Urbanist]">
             <CalendarDays className="size-5 dark:text-gray-300 text-black" />
             <span>Released: {game.released}</span>
@@ -315,7 +315,7 @@ export default function GamePopOver({
             </span>
           </div>
         </div>
-        <div className="flex justify-around items-center">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-around">
           <button
             className={cn(
               'text-white cursor-pointer bg-linear-to-r from-blue-400 to-blue-600 px-2 rounded-2xl text-lg font-[Urbanist] font-semibold',

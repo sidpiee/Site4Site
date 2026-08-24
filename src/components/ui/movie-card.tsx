@@ -18,12 +18,12 @@ export default function MovieCard({
     <>
       <div
         onClick={onClick}
-        className=" hover:scale-105 transition-all ease-out cursor-pointer flex flex-col dark:bg-card h-fit w-75 drop-shadow-xl backdrop-blur-md rounded-xl m-10 pb-3 text-card-foreground gap-2 bg-white"
+        className="mx-auto flex h-fit w-full max-w-75 cursor-pointer flex-col gap-2 rounded-xl bg-white pb-3 text-card-foreground drop-shadow-xl backdrop-blur-md transition-all ease-out hover:scale-[1.02] dark:bg-card"
       >
         <img
           src={movie.Poster}
           alt={movie.Title}
-          className="rounded-t-xl h-100 object-fit"
+          className="aspect-2/3 h-auto w-full rounded-t-xl object-cover"
           onError={(e) => {
             e.currentTarget.src = noImage;
           }}
@@ -31,8 +31,8 @@ export default function MovieCard({
         <div className="bg-background absolute right-1 top-2 px-2 py-1 rounded-xl dark:border-white/50 border border-black ">
           {movie.status === 'plan' ? 'Plan to watch' : 'Watched'}
         </div>
-        <div className="flex justify-between px-2 items-center">
-          <h1 className="font-bold text-center my-2 font-[Urbanist]">
+        <div className="flex items-center justify-between gap-2 px-2">
+          <h1 className="my-2 min-w-0 font-bold text-center font-[Urbanist]">
             {movie.Title} ({movie.Year})
           </h1>
           <Button

@@ -76,14 +76,14 @@ function RouteComponent() {
   const completed = animes.filter((a: SavedAnime) => a.status === 'Completed');
   return (
     <MainLayout>
-      <div className="mb-10 relative">
+      <div className="relative mb-8">
         <SearchBar
           placeholder="Death Note..."
           Search={search}
           SetSearch={setSearch}
         />
         {isLoading && (
-          <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm">
+          <div className="absolute left-0 top-full z-20 mt-2 w-full max-w-sm shadow-lg">
             <Loding />
           </div>
         )}
@@ -93,8 +93,8 @@ function RouteComponent() {
           </p>
         )}
         {animes.length === 0 && !loding && (
-          <div className="w-full mt-30 flex flex-col items-center justify-center text-center absolute">
-            <div className="text-6xl mb-4">🎬</div>
+          <div className="absolute mt-24 flex w-full flex-col items-center justify-center text-center sm:mt-30">
+            <div className="mb-4 text-5xl sm:text-6xl">🎬</div>
 
             <p className="text-2xl font-bold text-foreground">
               Your anime list is empty
@@ -110,7 +110,7 @@ function RouteComponent() {
           </div>
         )}
         {data?.data?.length > 0 && (
-          <div className="absolute top-full left-0 shadow-lg  mt-2 z-20 min-w-sm max-h-90 overflow-y-auto no-scrollbar">
+          <div className="absolute left-0 top-full z-20 mt-2 max-h-90 w-full max-w-sm overflow-y-auto shadow-lg no-scrollbar">
             {data.data.map((anime: Anime) => (
               <SearchResult
                 key={anime.mal_id}
@@ -131,7 +131,7 @@ function RouteComponent() {
           if (!open) setSelectedAnime(null);
         }}
       >
-        <DialogContent className="p-0 overflow-hidden max-w-4xl">
+        <DialogContent className="max-h-[90dvh] max-w-[calc(100%-1rem)] overflow-y-auto p-0 sm:max-w-4xl">
           {selectedAnime && (
             <AnimePopOver
               selectedAnime={selectedAnime}
@@ -146,8 +146,8 @@ function RouteComponent() {
             <h1 className="text-3xl  text-transparent bg-linear-to-r from-violet-500 to-violet-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Plan to Watch
             </h1>
-            <div className="h-1 w-100 bg-linear-to-r from-purple-500 to-purple-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
+            <div className="mt-3 mb-6 h-1 w-full max-w-100 rounded-full bg-linear-to-r from-purple-500 to-purple-800 sm:mb-8" />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
               {planned.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
@@ -169,8 +169,8 @@ function RouteComponent() {
             <h1 className="text-3xl  text-transparent bg-linear-to-r from-indigo-500 to-indigo-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Watching
             </h1>
-            <div className="h-1 w-175 bg-linear-to-r from-blue-500 to-blue-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
+            <div className="mt-3 mb-6 h-1 w-full max-w-175 rounded-full bg-linear-to-r from-blue-500 to-blue-800 sm:mb-8" />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
               {watching.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
@@ -193,8 +193,8 @@ function RouteComponent() {
             <h1 className="text-3xl  text-transparent bg-linear-to-r from-emerald-500 to-emerald-700 font-bold inline-block bg-clip-text font-[Urbanist] italic">
               Completed
             </h1>
-            <div className="h-1 w-250 bg-linear-to-r from-green-500 to-green-800 mt-3 mb-8 rounded-full" />
-            <div className="grid grid-cols-5 gap-x-10 gap-y-10">
+            <div className="mt-3 mb-6 h-1 w-full max-w-250 rounded-full bg-linear-to-r from-green-500 to-green-800 sm:mb-8" />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
               {completed.map((a: SavedAnime) => {
                 return (
                   <AnimeCard
